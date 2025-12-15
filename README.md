@@ -240,7 +240,7 @@ This project was prepared for the **SENG321 - Software Engineering** course.
 * **İrem Akay** - 230204059
 * **Ekin Eryiğit** - 220205013
 
-**Supervisor:** Prof. Dr. Hakan Çağlar & Res. Asst. [cite_start]Cansu Yörük[cite: 4, 5].
+**Supervisor:** Prof. Dr. Hakan Çağlar & Res. Asst. Cansu Yörük.
 
 ---
 
