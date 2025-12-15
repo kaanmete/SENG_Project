@@ -26,26 +26,26 @@
 
 ## 📖 Project Overview
 
-**Level Assessment (AI Diagnostic Engine)** is a comprehensive web platform that simplifies English proficiency assessment. [cite_start]Unlike traditional static tests, our system uses an **AI-driven adaptive engine** that adjusts question difficulty in real-time based on user performance[cite: 15, 17].
+**Level Assessment (AI Diagnostic Engine)** is a comprehensive web platform that simplifies English proficiency assessment. Unlike traditional static tests, our system uses an **AI-driven adaptive engine** that adjusts question difficulty in real-time based on user performance.
 
-[cite_start]The system evaluates all core language skills: **Reading, Listening, Writing, Speaking, Grammar, and Vocabulary**, providing users with a CEFR-aligned score (A1-C2) and personalized study plans[cite: 30].
+The system evaluates all core language skills: **Reading, Listening, Writing, Speaking, Grammar, and Vocabulary**, providing users with a CEFR-aligned score (A1-C2) and personalized study plans.
 
 ---
 
 ## ✨ Key Features
 
-* [cite_start]**🧠 Adaptive AI Engine:** Dynamically increases or decreases question difficulty based on user responses (FR-06)[cite: 30].
-* [cite_start]**🎙️ Speaking & Writing Analysis:** Uses advanced AI models to grade pronunciation, fluency, and essay structure (FR-14, FR-15)[cite: 30].
-* [cite_start]**📊 Integrated Dashboard:** Visualizes progress with detailed charts and CEFR progression metrics (FR-12)[cite: 30].
-* [cite_start]**💡 Smart Hints:** Provides context-aware hints without revealing answers during exams (UC-06)[cite: 98].
-* [cite_start]**📅 Personalized Study Plans:** Generates tailored learning roadmaps based on weak areas (UC-18)[cite: 473].
-* [cite_start]**🛡️ Admin Panel:** Complete system monitoring and user management for administrators (UC-22)[cite: 544].
+***🧠 Adaptive AI Engine:** Dynamically increases or decreases question difficulty based on user responses (FR-06)[cite: 30].
+***🎙️ Speaking & Writing Analysis:** Uses advanced AI models to grade pronunciation, fluency, and essay structure (FR-14, FR-15)[cite: 30].
+***📊 Integrated Dashboard:** Visualizes progress with detailed charts and CEFR progression metrics (FR-12)[cite: 30].
+***💡 Smart Hints:** Provides context-aware hints without revealing answers during exams (UC-06)[cite: 98].
+***📅 Personalized Study Plans:** Generates tailored learning roadmaps based on weak areas (UC-18)[cite: 473].
+***🛡️ Admin Panel:** Complete system monitoring and user management for administrators (UC-22)[cite: 544].
 
 ---
 
 ## 🛠️ Tech Stack
 
-[cite_start]This project follows a **Layered Architecture** (Controller-Service-Repository) pattern[cite: 1060].
+This project follows a **Layered Architecture** (Controller-Service-Repository) pattern.
 
 | Component | Technology | Description |
 | :--- | :--- | :--- |
@@ -149,21 +149,6 @@ LevelAssessment_AI_Engine/
 └── database/
     └── schema.sql                        # PostgreSQL table creation scripts
 ```
-
----
-
-## 🏗️ Architecture & Design
-
-The system is designed with strict adherence to Software Engineering principles. Below are the core diagrams representing the system's logic.
-
-### Class Diagram
-![Class Diagram](./docs/class_diagram.png)
-[cite_start]*Ref: Defined classes including User, ExamController, and AIDiagnosticEngine[cite: 1062].*
-
-### System Flow (Sequence)
-The interaction between the **Frontend**, **Controllers**, and the **AI Engine** ensures a seamless adaptive experience.
-*(Refer to `/docs` for detailed Sequence Diagrams of UC-03 and UC-18).*
-
 ---
 
 ## 📋 Requirement Traceability Matrix
@@ -246,7 +231,7 @@ Follow these instructions to set up the project locally.
 
 ## 👥 Contributors
 
-[cite_start]This project was prepared for the **SENG321 - Software Engineering** course[cite: 3].
+This project was prepared for the **SENG321 - Software Engineering** course.
 
 * **Umut Özcan** - 230205016
 * **Diclenaz Erman** - 230204020
