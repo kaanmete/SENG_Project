@@ -34,12 +34,12 @@ The system evaluates all core language skills: **Reading, Listening, Writing, Sp
 
 ## ✨ Key Features
 
-***🧠 Adaptive AI Engine:** Dynamically increases or decreases question difficulty based on user responses (FR-06)[cite: 30].
-***🎙️ Speaking & Writing Analysis:** Uses advanced AI models to grade pronunciation, fluency, and essay structure (FR-14, FR-15)[cite: 30].
-***📊 Integrated Dashboard:** Visualizes progress with detailed charts and CEFR progression metrics (FR-12)[cite: 30].
-***💡 Smart Hints:** Provides context-aware hints without revealing answers during exams (UC-06)[cite: 98].
-***📅 Personalized Study Plans:** Generates tailored learning roadmaps based on weak areas (UC-18)[cite: 473].
-***🛡️ Admin Panel:** Complete system monitoring and user management for administrators (UC-22)[cite: 544].
+**🧠 Adaptive AI Engine:** Dynamically increases or decreases question difficulty based on user responses (FR-06)[cite: 30].
+**🎙️ Speaking & Writing Analysis:** Uses advanced AI models to grade pronunciation, fluency, and essay structure (FR-14, FR-15)[cite: 30].
+**📊 Integrated Dashboard:** Visualizes progress with detailed charts and CEFR progression metrics (FR-12)[cite: 30].
+**💡 Smart Hints:** Provides context-aware hints without revealing answers during exams (UC-06)[cite: 98].
+**📅 Personalized Study Plans:** Generates tailored learning roadmaps based on weak areas (UC-18)[cite: 473].
+**🛡️ Admin Panel:** Complete system monitoring and user management for administrators (UC-22)[cite: 544].
 
 ---
 
