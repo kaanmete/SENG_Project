@@ -1,12 +1,63 @@
-# SENG_Project
-This project is consist of two parts; frontend programming and backend programming. Backend side of this project will be written with Python 3.12.10 version.
-Frontend side of this project will be written with HTML5, CSS3 and Javascript.
-Purpose of this system is to provide a unified, web-based platform that simplifies English proficiency assessment for Users.
+<div align="center">
 
+  <h1>🚀 Level Assessment AI Diagnostic Engine</h1>
+  
+  <p>
+    <strong>A SaaS-based adaptive testing platform designed to evaluate and track English proficiency using AI.</strong>
+  </p>
+
+  <p>
+    <a href="#key-features">Key Features</a> •
+    <a href="#tech-stack">Tech Stack</a> •
+    <a href="#getting-started">Getting Started</a> •
+    <a href="#architecture">Architecture</a> •
+    <a href="#team">Team</a>
+  </p>
+
+  <img src="https://img.shields.io/badge/Course-SENG321-blue?style=flat-square" alt="Course" />
+  <img src="https://img.shields.io/badge/Python-3.12.10-yellow?style=flat-square&logo=python" alt="Python" />
+  <img src="https://img.shields.io/badge/Frontend-HTML5%2FJS-orange?style=flat-square&logo=html5" alt="Frontend" />
+  <img src="https://img.shields.io/badge/Database-PostgreSQL-336791?style=flat-square&logo=postgresql" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License" />
+
+</div>
+
+<br />
+
+## 📖 Project Overview
+
+**Level Assessment (AI Diagnostic Engine)** is a comprehensive web platform that simplifies English proficiency assessment. [cite_start]Unlike traditional static tests, our system uses an **AI-driven adaptive engine** that adjusts question difficulty in real-time based on user performance[cite: 15, 17].
+
+[cite_start]The system evaluates all core language skills: **Reading, Listening, Writing, Speaking, Grammar, and Vocabulary**, providing users with a CEFR-aligned score (A1-C2) and personalized study plans[cite: 30].
 
 ---
 
-## 📁 Project Structure
+## ✨ Key Features
+
+* [cite_start]**🧠 Adaptive AI Engine:** Dynamically increases or decreases question difficulty based on user responses (FR-06)[cite: 30].
+* [cite_start]**🎙️ Speaking & Writing Analysis:** Uses advanced AI models to grade pronunciation, fluency, and essay structure (FR-14, FR-15)[cite: 30].
+* [cite_start]**📊 Integrated Dashboard:** Visualizes progress with detailed charts and CEFR progression metrics (FR-12)[cite: 30].
+* [cite_start]**💡 Smart Hints:** Provides context-aware hints without revealing answers during exams (UC-06)[cite: 98].
+* [cite_start]**📅 Personalized Study Plans:** Generates tailored learning roadmaps based on weak areas (UC-18)[cite: 473].
+* [cite_start]**🛡️ Admin Panel:** Complete system monitoring and user management for administrators (UC-22)[cite: 544].
+
+---
+
+## 🛠️ Tech Stack
+
+[cite_start]This project follows a **Layered Architecture** (Controller-Service-Repository) pattern[cite: 1060].
+
+| Component | Technology | Description |
+| :--- | :--- | :--- |
+| **Backend** | Python 3.12.10 | Core logic using Flask/FastAPI structure. |
+| **Frontend** | HTML5, CSS3, JS | Vanilla JS with Fetch API for dynamic interactions. |
+| **Database** | PostgreSQL | Relational database for Users, Questions, and Results. |
+| **AI Engine** | OpenAI API / LLM | External module for adaptive analysis and feedback. |
+| **Architecture** | MVC / Layered | Clean separation of concerns (Controllers, Services, Repos). |
+
+---
+
+## 📂 Project Structure
 
 ```bash
 LevelAssessment_AI_Engine/
@@ -98,8 +149,24 @@ LevelAssessment_AI_Engine/
 └── database/
     └── schema.sql                        # PostgreSQL table creation scripts
 ```
+
 ---
-### Project Requirement Traceability Matrix
+
+## 🏗️ Architecture & Design
+
+The system is designed with strict adherence to Software Engineering principles. Below are the core diagrams representing the system's logic.
+
+### Class Diagram
+![Class Diagram](./docs/class_diagram.png)
+[cite_start]*Ref: Defined classes including User, ExamController, and AIDiagnosticEngine[cite: 1062].*
+
+### System Flow (Sequence)
+The interaction between the **Frontend**, **Controllers**, and the **AI Engine** ensures a seamless adaptive experience.
+*(Refer to `/docs` for detailed Sequence Diagrams of UC-03 and UC-18).*
+
+---
+
+## 📋 Requirement Traceability Matrix
 
 This table demonstrates the coverage of all Functional Requirements (FR) and Use Cases (UC) defined in the SENG321 Project Documentation within the implemented file structure.
 
@@ -131,3 +198,65 @@ This table demonstrates the coverage of all Functional Requirements (FR) and Use
 | **UC-24** | **FR-09** | **Analyze Responses** (AI Engine Processing) | `backend/services/ai_engine_service.py` <br> `backend/services/reporting_service.py` |
 | **UC-25** | **FR-10** | **Aggregate CEFR Level** (Calculate A1-C2 Score) | `backend/services/reporting_service.py` <br> `backend/models/report.py` |
 | **UC-26** | **FR-16** | **View Remaining Time** (Countdown Timer) | `frontend/js/exam_modules/exam_manager.js` <br> `frontend/css/exam.css` |
+
+---
+
+## 🚀 Getting Started
+
+Follow these instructions to set up the project locally.
+
+### Prerequisites
+* Python 3.12.10
+* PostgreSQL
+* Node.js (Optional, for tooling)
+
+### Backend Setup
+1.  **Clone the repository**
+    ```bash
+    git clone [https://github.com/username/level-assessment-ai.git](https://github.com/username/level-assessment-ai.git)
+    cd level-assessment-ai/backend
+    ```
+
+2.  **Create Virtual Environment**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    ```
+
+3.  **Install Dependencies**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Configure Database**
+    * Create a PostgreSQL database named `level_assessment_db`.
+    * Update `config.py` with your DB credentials and OpenAI API Key.
+
+5.  **Run the Server**
+    ```bash
+    python app.py
+    ```
+
+### Frontend Setup
+1.  Navigate to the `frontend` folder.
+2.  Update `js/config.js` with your local backend URL (e.g., `http://localhost:5000/api`).
+3.  Open `index.html` in your browser (or use VS Code Live Server).
+
+---
+
+## 👥 Contributors
+
+[cite_start]This project was prepared for the **SENG321 - Software Engineering** course[cite: 3].
+
+* **Umut Özcan** - 230205016
+* **Diclenaz Erman** - 230204020
+* **Kaan Mete Küçük** - 230201043
+* **Burçak Meşelikaş** - 220201010
+* **İrem Akay** - 230204059
+* **Ekin Eryiğit** - 220205013
+
+**Supervisor:** Prof. Dr. Hakan Çağlar & Res. Asst. [cite_start]Cansu Yörük[cite: 4, 5].
+
+---
+
+
