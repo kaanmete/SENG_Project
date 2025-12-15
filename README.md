@@ -12,9 +12,9 @@ Purpose of this system is to provide a unified, web-based platform that simplifi
 LevelAssessment_AI_Engine/
 │
 ├── backend/                              # Python 3.12.10 Backend
-│   ├── app.py                            # Uygulama giriş noktası (Flask/FastAPI)
-│   ├── config.py                         # DB bağlantısı ve API Key ayarları
-│   ├── requirements.txt                  # Bağımlılıklar (openai, sqlalchemy, flask vb.)
+│   ├── app.py                            # Application entry point (Flask/FastAPI)
+│   ├── config.py                         # Database connection and API Key configurations
+│   ├── requirements.txt                  # Dependencies (openai, sqlalchemy, flask, etc.)
 │   │
 │   ├── controllers/                      # [Class Diagram: Controllers]
 │   │   ├── __init__.py
@@ -22,40 +22,40 @@ LevelAssessment_AI_Engine/
 │   │   ├── learning_controller.py        # Learning Purpose, Study Plan (UC-02, UC-18)
 │   │   ├── exam_controller.py            # Start Exam, Submit Answer, Hints (UC-03, UC-06, UC-08~14)
 │   │   ├── result_controller.py          # View Results, Feedback (UC-07, UC-19~21)
-│   │   └── admin_controller.py           # System Health, User Mgmt (UC-22)
+│   │   └── admin_controller.py           # System Health, User Management (UC-22)
 │   │
-│   ├── services/                         # [Class Diagram: Services - İş Mantığı]
+│   ├── services/                         # [Class Diagram: Services - Business Logic]
 │   │   ├── __init__.py
-│   │   ├── user_profile_service.py       # Kullanıcı profili ve amacı yönetimi
-│   │   ├── exam_service.py               # Adaptive algoritma (FR-06) ve Sınav oturum yönetimi
-│   │   ├── hint_service.py               # İpucu üretimi mantığı (UC-06)
-│   │   ├── reporting_service.py          # CEFR hesaplama ve rapor oluşturma (UC-25)
-│   │   ├── admin_service.py              # Sistem metrikleri ve admin işlemleri
-│   │   └── ai_engine_service.py          # [External Module] OpenAI/LLM entegrasyonu (FR-09, FR-14, FR-15)
+│   │   ├── user_profile_service.py       # User profile and learning purpose management
+│   │   ├── exam_service.py               # Adaptive algorithm (FR-06) and Exam session management
+│   │   ├── hint_service.py               # Hint generation logic (UC-06)
+│   │   ├── reporting_service.py          # CEFR calculation and report generation (UC-25)
+│   │   ├── admin_service.py              # System metrics and admin operations
+│   │   └── ai_engine_service.py          # [External Module] OpenAI/LLM integration (FR-09, FR-14, FR-15)
 │   │
-│   ├── repositories/                     # [Class Diagram: Repositories - Veritabanı]
+│   ├── repositories/                     # [Class Diagram: Repositories - Database Access]
 │   │   ├── __init__.py
-│   │   ├── user_repository.py            # User tablosu işlemleri
-│   │   ├── question_repository.py        # Soru havuzu ve dinamik soru yönetimi
-│   │   ├── response_repository.py        # Kullanıcı cevaplarını kaydetme
-│   │   ├── result_repository.py          # Sonuç ve rapor saklama
-│   │   └── system_metrics_repo.py        # Admin paneli için loglar
+│   │   ├── user_repository.py            # User table operations
+│   │   ├── question_repository.py        # Question pool and dynamic question management
+│   │   ├── response_repository.py        # Saving user responses
+│   │   ├── result_repository.py          # Storing results and reports
+│   │   └── system_metrics_repo.py        # Logs for Admin panel
 │   │
 │   ├── models/                           # [Class Diagram: Domain Entities]
-│   │   ├── user.py                       # User, Administrator sınıfları
+│   │   ├── user.py                       # User, Administrator classes
 │   │   ├── question.py                   # Question, QuestionType (Enum)
-│   │   ├── response.py                   # UserResponse (Cevaplar)
+│   │   ├── response.py                   # UserResponse (Answers)
 │   │   └── report.py                     # ResultReport, StudyPlan, CEFRLevel
 │   │
-│   └── utils/                            # Yardımcı Araçlar
-│       ├── jwt_handler.py                # Token doğrulama (FR-03)
-│       ├── email_sender.py               # Email doğrulama servisi (FR-02)
-│       └── validators.py                 # Input doğrulama
+│   └── utils/                            # Helper Utilities
+│       ├── jwt_handler.py                # Token validation (FR-03)
+│       ├── email_sender.py               # Email verification service (FR-02)
+│       └── validators.py                 # Input validation
 │
 ├── frontend/                             # HTML5, CSS3, JS Frontend
 │   ├── index.html                        # Landing Page
 │   │
-│   ├── pages/                            # Sayfalar (Use Case bazlı ayrım)
+│   ├── pages/                            # Pages (Separated by Use Cases)
 │   │   ├── auth/
 │   │   │   ├── login.html                # (UC-01)
 │   │   │   ├── register.html             # (UC-01)
@@ -63,40 +63,40 @@ LevelAssessment_AI_Engine/
 │   │   │   └── reset_password.html       # (UC-04)
 │   │   │
 │   │   ├── dashboard/
-│   │   │   ├── user_home.html            # İlerleme grafikleri (UC-15)
-│   │   │   ├── learning_purpose.html     # Amaç belirleme (UC-02)
-│   │   │   └── study_plan.html           # Kişisel çalışma planı (UC-18)
+│   │   │   ├── user_home.html            # Progress charts (UC-15)
+│   │   │   ├── learning_purpose.html     # Setting goals (UC-02)
+│   │   │   └── study_plan.html           # Personalized study plan (UC-18)
 │   │   │
 │   │   ├── exam/
-│   │   │   ├── exam_setup.html           # Sınav tipi seçimi (Reading, Grammar vs.)
-│   │   │   ├── exam_room.html            # Ana sınav ekranı (UC-03, UC-26 Timer burada)
-│   │   │   └── result_view.html          # Sonuç ve Feedback ekranı (UC-07)
+│   │   │   ├── exam_setup.html           # Exam type selection (Reading, Grammar, etc.)
+│   │   │   ├── exam_room.html            # Main exam interface (UC-03, Timer for UC-26 is here)
+│   │   │   └── result_view.html          # Result and Feedback screen (UC-07)
 │   │   │
 │   │   └── admin/
 │   │       ├── system_health.html        # Server load, uptime (UC-22)
-│   │       └── user_management.html      # Kullanıcı rolleri düzenleme (UC-22)
+│   │       └── user_management.html      # Managing user roles (UC-22)
 │   │
 │   ├── css/
-│   │   ├── main.css                      # Genel stiller
-│   │   ├── dashboard.css                 # Dashboard grid yapısı
-│   │   ├── exam.css                      # Sınav arayüzü ve split-screen (Reading için)
-│   │   └── responsive.css                # Mobil uyumluluk
+│   │   ├── main.css                      # Global styles
+│   │   ├── dashboard.css                 # Dashboard grid structure
+│   │   ├── exam.css                      # Exam interface and split-screen (for Reading)
+│   │   └── responsive.css                # Mobile compatibility
 │   │
 │   └── js/
-│       ├── config.js                     # API Base URL
-│       ├── api_client.js                 # Backend ile fetch işlemleri (Merkezi yapı)
-│       ├── auth_logic.js                 # Login/Register mantığı
-│       ├── dashboard_logic.js            # Grafikler (Chart.js entegrasyonu)
+│       ├── config.js                     # API Base URL configuration
+│       ├── api_client.js                 # Centralized Fetch operations for Backend
+│       ├── auth_logic.js                 # Login/Register logic
+│       ├── dashboard_logic.js            # Charts (Chart.js integration)
 │       │
-│       └── exam_modules/                 # Sınav Mantığı (Modüler Yapı)
-│           ├── exam_manager.js           # Sınav başlatma/bitirme, Timer (UC-26)
-│           ├── question_renderer.js      # Soru tipine göre HTML üretme (Reading vs Grammar)
-│           ├── adaptive_engine.js        # Frontend tarafı zorluk takibi (Opsiyonel)
-│           ├── hint_handler.js           # İpucu butonu işlevleri (UC-06)
-│           └── audio_recorder.js         # Speaking sınavı için ses kaydı (FR-14)
+│       └── exam_modules/                 # Exam Logic (Modular Structure)
+│           ├── exam_manager.js           # Exam start/finish logic, Timer (UC-26)
+│           ├── question_renderer.js      # Dynamic HTML generation by question type (Reading vs Grammar)
+│           ├── adaptive_engine.js        # Frontend-side difficulty tracking (Optional)
+│           ├── hint_handler.js           # Hint button functionality (UC-06)
+│           └── audio_recorder.js         # Audio recording for Speaking exam (FR-14)
 │
 └── database/
-    └── schema.sql                        # PostgreSQL tablo oluşturma scriptleri
+    └── schema.sql                        # PostgreSQL table creation scripts
 ```
 ---
 ### Project Requirement Traceability Matrix
