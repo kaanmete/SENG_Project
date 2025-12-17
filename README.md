@@ -18,7 +18,6 @@
   <img src="https://img.shields.io/badge/Backend-Python%203.12-yellow?style=flat-square&logo=python" alt="Python" />
   <img src="https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61DAFB?style=flat-square&logo=react" alt="React" />
   <img src="https://img.shields.io/badge/Database-PostgreSQL-336791?style=flat-square&logo=postgresql" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License" />
 
 </div>
 
@@ -78,66 +77,108 @@ The project is structured to ensure scalability and maintainability, adhering to
 ```bash
 LevelAssessment_Project/
 │
-├── backend/                                  # [Python 3.12.10 API]
-│   ├── app.py                                # Application Entry Point
-│   ├── config.py                             # DB Config, OpenAI API Key
-│   ├── requirements.txt                      # Dependencies
+├── backend/                                  # [PYTHON 3.12.10 BACKEND API]
+│   ├── app.py                                # Application Entry Point (Flask/FastAPI initialization)
+│   ├── config.py                             # Configuration (DB URL, OpenAI API Key, JWT Secret)
+│   ├── requirements.txt                      # List of dependencies (flask, sqlalchemy, openai, etc.)
+│   ├── .env                                  # Environment variables (Sensitive Data)
 │   │
-│   ├── controllers/                          # [Controllers Layer]
-│   │   ├── auth_controller.py                # Login, Register
-│   │   ├── exam_controller.py                # Start Exam, Submit, Hint
-│   │   ├── result_controller.py              # Results & Feedback
-│   │   └── admin_controller.py               # System Health & Users
+│   ├── controllers/                          # [CONTROLLERS LAYER - HTTP REQUEST HANDLERS]
+│   │   ├── __init__.py
+│   │   ├── auth_controller.py                # [UC-01, UC-04, UC-05] Login, Register, Verify Email, Reset Password
+│   │   ├── exam_controller.py                # [UC-03, UC-23] Start Exam, Submit Answer, Pause/Resume
+│   │   ├── hint_controller.py                # [UC-06] Handle Hint requests during exam
+│   │   ├── result_controller.py              # [UC-07, UC-15] Fetch Exam Reports & Dashboard Metrics
+│   │   ├── learning_controller.py            # [UC-02, UC-18] Manage Learning Purpose & Study Plans
+│   │   └── admin_controller.py               # [UC-22] System Health Monitoring & User Role Management
 │   │
-│   ├── services/                             # [Services Layer - Business Logic]
-│   │   ├── exam_service.py                   # Adaptive Algorithm Logic
-│   │   ├── ai_engine_service.py              # OpenAI Wrapper (Speaking/Writing)
-│   │   ├── reporting_service.py              # CEFR Calculation
-│   │   └── user_profile_service.py           # Profile Management
+│   ├── services/                             # [SERVICES LAYER - BUSINESS LOGIC]
+│   │   ├── __init__.py
+│   │   ├── exam_service.py                   # [FR-05, FR-06] **Adaptive Algorithm**: Calculates next question difficulty
+│   │   ├── ai_engine_service.py              # [FR-09, FR-14, FR-15] **OpenAI Wrapper**: NLP for Speaking/Writing analysis
+│   │   ├── reporting_service.py              # [UC-25, FR-10] Aggregates scores & Calculates CEFR Level (A1-C2)
+│   │   ├── hint_service.py                   # [UC-06, FR-17] Generates context-aware hints via AI
+│   │   ├── user_profile_service.py           # [UC-02, FR-04] Logic for updating user goals
+│   │   └── admin_service.py                  # [UC-22] Aggregates system logs and performance metrics
 │   │
-│   ├── repositories/                         # [Repositories Layer - DB Access]
-│   │   ├── question_repository.py            # Question Bank
-│   │   ├── response_repository.py            # User Answers
-│   │   └── result_repository.py              # Exam Results
+│   ├── repositories/                         # [REPOSITORIES LAYER - DATABASE ACCESS]
+│   │   ├── __init__.py
+│   │   ├── user_repository.py                # [UC-01] CRUD operations for Users
+│   │   ├── question_repository.py            # [UC-16, UC-17] Fetch questions from pool & filter by tags
+│   │   ├── response_repository.py            # [FR-08] Save user answers to DB
+│   │   ├── result_repository.py              # [UC-07] Store and retrieve final exam reports
+│   │   └── system_metrics_repo.py            # [UC-22] Log server load for Admin Dashboard
 │   │
-│   └── models/                               # [Domain Entities]
-│       ├── user.py
-│       ├── question.py
-│       └── report.py
+│   ├── models/                               # [DOMAIN ENTITIES - DB TABLES]
+│   │   ├── __init__.py
+│   │   ├── user.py                           # User & Role entities
+│   │   ├── question.py                       # Question entity (Type, Difficulty, Content)
+│   │   ├── response.py                       # UserResponse entity
+│   │   └── report.py                         # ExamResult, StudyPlan, CEFRLevel entities
+│   │
+│   └── utils/                                # [UTILITIES & HELPERS]
+│       ├── __init__.py
+│       ├── jwt_handler.py                    # [FR-03] Token generation and validation
+│       ├── email_sender.py                   # [FR-02] Logic for sending verification emails
+│       └── validators.py                     # Input validation logic
 │
-├── frontend/                                 # [React + Vite]
-│   ├── package.json                          # Dependencies
+├── frontend/                                 # [REACT + VITE FRONTEND]
+│   ├── package.json                          # NPM Dependencies
 │   ├── index.html                            # Root HTML
 │   │
 │   └── src/
-│       ├── api/                              # Axios & Endpoints
-│       ├── assets/                           # Images & Fonts
+│       ├── main.jsx                          # React Entry Point
+│       ├── App.jsx                           # Routing & Navigation Rules
 │       │
-│       ├── components/                       # [Reusable Components]
-│       │   ├── dashboard/                    # Charts & Stat Cards
-│       │   ├── exam/                         # Core Exam UI
-│       │   │   ├── QuestionRenderer.jsx      # Polymorphic Question UI
-│       │   │   ├── ExamTimer.jsx             # Countdown Logic
-│       │   │   ├── SplitScreen.jsx           # Reading Layout
-│       │   │   └── VoiceRecorder.jsx         # Speaking Input
-│       │   └── admin/                        # Admin Tables
+│       ├── api/                              # [API LAYER - AXIOS CLIENTS]
+│       │   ├── axios.js                      # Base Instance with Interceptors
+│       │   ├── authApi.js                    # Endpoints for Auth (Login, Register)
+│       │   ├── examApi.js                    # Endpoints for Exam (Start, Submit, Hint)
+│       │   ├── userApi.js                    # Endpoints for Dashboard (Stats, Plans)
+│       │   └── adminApi.js                   # Endpoints for Admin functions
 │       │
-│       ├── context/                          # [Global State]
-│       │   ├── AuthContext.jsx               # User Session
-│       │   └── ExamContext.jsx               # Exam State
+│       ├── context/                          # [GLOBAL STATE MANAGEMENT]
+│       │   ├── AuthContext.jsx               # User Session State
+│       │   └── ExamContext.jsx               # Active Exam State (Timer, Current Question)
 │       │
-│       ├── hooks/                            # [Custom Logic]
-│       │   ├── useTimer.js                   # Timer Logic
-│       │   └── useAdaptiveExam.js            # Next Question Fetching
+│       ├── hooks/                            # [CUSTOM LOGIC HOOKS]
+│       │   ├── useTimer.js                   # [UC-26] Encapsulated Timer Logic
+│       │   └── useAdaptiveExam.js            # [FR-06] Logic to handle question transitions
 │       │
-│       └── pages/                            # [Views / Routes]
-│           ├── auth/                         # Login / Register Pages
-│           ├── dashboard/                    # User Dashboard
-│           ├── exam/                         # ExamRoom & Results
-│           └── admin/                        # Admin Panel
+│       ├── pages/                            # [VIEWS / PAGES]
+│       │   ├── auth/
+│       │   │   ├── Login.jsx                 # [UC-01]
+│       │   │   ├── Register.jsx              # [UC-01]
+│       │   │   └── VerifyEmail.jsx           # [UC-05]
+│       │   ├── dashboard/
+│       │   │   ├── UserDashboard.jsx         # [UC-15] Main User Hub
+│       │   │   ├── MyStudyPlan.jsx           # [UC-18] Personalized Plan View
+│       │   │   └── LearningPurpose.jsx       # [UC-02] Goal Setting View
+│       │   ├── exam/
+│       │   │   ├── ExamSetup.jsx             # Exam Type Selection
+│       │   │   ├── ExamRoom.jsx              # [UC-03] The Main Exam Interface
+│       │   │   └── ExamResult.jsx            # [UC-07] Final Report View
+│       │   └── admin/
+│       │       └── AdminPanel.jsx            # [UC-22] Admin Management View
+│       │
+│       └── components/                       # [REUSABLE UI COMPONENTS]
+│           ├── common/
+│           │   ├── Navbar.jsx
+│           │   ├── Sidebar.jsx
+│           │   ├── Button.jsx
+│           │   └── Modal.jsx
+│           ├── exam/
+│           │   ├── ExamTimer.jsx             # [UC-26] Visual Timer Component
+│           │   ├── QuestionRenderer.jsx      # [Polymorphic] Renders Grammar/Reading/Writing UI
+│           │   ├── SplitScreen.jsx           # [UC-08] Layout for Reading Comprehension
+│           │   ├── VoiceRecorder.jsx         # [UC-14] Audio Input for Speaking
+│           │   └── HintButton.jsx            # [UC-06] Trigger for Hints
+│           └── dashboard/
+│               ├── ProgressChart.jsx         # [FR-12] Visual Charts (Recharts/Chart.js)
+│               └── StatCard.jsx              # Summary Statistics Card
 │
 └── database/
-    └── schema.sql                            # Database Schema
+    └── schema.sql                            # SQL Scripts for Table Creation
 ```
 
 ---
