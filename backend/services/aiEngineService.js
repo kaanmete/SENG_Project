@@ -2,9 +2,27 @@ const OpenAI = require('openai');
 const logger = require('../utils/logger');
 
 // Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+let openai;
+try {
+  if (process.env.OPENAI_API_KEY) {
+    openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
+    });
+    logger.info('OpenAI client initialized');
+  } else {
+    logger.warn('OPENAI_API_KEY missing. AI features will be disabled.');
+  }
+} catch (error) {
+  logger.error('Failed to initialize OpenAI client', error);
+}
+
+// Helper to check AI availability
+const checkAI = () => {
+  if (!openai) {
+    throw new Error('AI features are not available (Missing API Key)');
+  }
+  return openai;
+};
 
 // CEFR Levels mapping
 const CEFR_LEVELS = {
@@ -33,7 +51,8 @@ Requirements:
 
 Make it relevant to ${userPurpose} context.`;
 
-    const response = await openai.chat.completions.create({
+    const ai = checkAI();
+    const response = await ai.chat.completions.create({
       model: 'gpt-4',
       messages: [
         {
@@ -88,7 +107,8 @@ Return JSON:
   "suggestions": "improvement suggestions"
 }`;
 
-    const response = await openai.chat.completions.create({
+    const ai = checkAI();
+    const response = await ai.chat.completions.create({
       model: 'gpt-4',
       messages: [
         {
@@ -144,7 +164,8 @@ Return JSON:
   "suggestions": ["suggestion1", "suggestion2"]
 }`;
 
-    const response = await openai.chat.completions.create({
+    const ai = checkAI();
+    const response = await ai.chat.completions.create({
       model: 'gpt-4',
       messages: [
         {
@@ -198,7 +219,8 @@ Return JSON with scores (1-5) and feedback:
   "improvements": ["improvement1", "improvement2"]
 }`;
 
-    const response = await openai.chat.completions.create({
+    const ai = checkAI();
+    const response = await ai.chat.completions.create({
       model: 'gpt-4',
       messages: [
         {
@@ -271,7 +293,8 @@ Return JSON:
   "milestones": ["milestone1", "milestone2"]
 }`;
 
-    const response = await openai.chat.completions.create({
+    const ai = checkAI();
+    const response = await ai.chat.completions.create({
       model: 'gpt-4',
       messages: [
         {
@@ -315,7 +338,8 @@ The hint should:
 
 Return only the hint text as a string.`;
 
-    const response = await openai.chat.completions.create({
+    const ai = checkAI();
+    const response = await ai.chat.completions.create({
       model: 'gpt-4',
       messages: [
         {

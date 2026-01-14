@@ -1,3 +1,4 @@
+
 require('dotenv').config();
 const express = require('express');
 const http = require('http');
@@ -7,21 +8,16 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
 const logger = require('./utils/logger');
+
 const { apiLimiter } = require('./middleware/rateLimiter');
 const path = require('path');
 
+
 // Initialize Express app
+
 const app = express();
 const server = http.createServer(app);
 
-// Initialize Socket.IO for real-time features (NFR-04)
-const io = new Server(server, {
-  cors: {
-    origin: allowedOrigins,
-    methods: ['GET', 'POST'],
-    credentials: true
-  }
-});
 
 // Allowed origins list
 const allowedOrigins = [
@@ -34,6 +30,19 @@ const allowedOrigins = [
 if (process.env.FRONTEND_URL) {
   allowedOrigins.push(process.env.FRONTEND_URL);
 }
+
+
+// Initialize Socket.IO for real-time features (NFR-04)
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+});
+
+// Allowed origins list
+
 
 // Middleware
 app.use(helmet()); // Security headers
@@ -69,6 +78,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use('/api/', apiLimiter);
 
 // Import routes
+
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const examRoutes = require('./routes/examRoutes');
