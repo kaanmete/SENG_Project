@@ -7,7 +7,9 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
 const logger = require('./utils/logger');
+const logger = require('./utils/logger');
 const { apiLimiter } = require('./middleware/rateLimiter');
+const path = require('path');
 
 // Initialize Express app
 const app = express();
@@ -16,7 +18,7 @@ const server = http.createServer(app);
 // Initialize Socket.IO for real-time features (NFR-04)
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'https://web-production-a7769.up.railway.app',
+    origin: process.env.FRONTEND_URL || 'https://frontend-production-77355.up.railway.app',
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -26,7 +28,7 @@ const io = new Server(server, {
 app.use(helmet()); // Security headers
 app.use(compression()); // Response compression
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://web-production-a7769.up.railway.app',
+  origin: process.env.FRONTEND_URL || 'https://frontend-production-77355.up.railway.app',
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -70,8 +72,11 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Root endpoint
-app.get('/', (req, res) => {
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Root endpoint - API info (now under /api to avoid conflict with frontend, or specific route)
+app.get('/api/info', (req, res) => {
   res.json({
     message: 'AI Diagnostic Engine API',
     version: '1.0.0',
@@ -85,6 +90,11 @@ app.get('/', (req, res) => {
       health: '/health'
     }
   });
+});
+
+// Anything that doesn't match the above routes, send back index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 // 404 handler
