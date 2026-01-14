@@ -16,7 +16,7 @@ const server = http.createServer(app);
 // Initialize Socket.IO for real-time features (NFR-04)
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: process.env.FRONTEND_URL || 'frontend-production-77355.up.railway.app',
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -26,7 +26,7 @@ const io = new Server(server, {
 app.use(helmet()); // Security headers
 app.use(compression()); // Response compression
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL || 'frontend-production-77355.up.railway.app',
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -204,7 +204,7 @@ server.listen(PORT, () => {
   logger.info(`
 TPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW
 Q                                                          Q
-Q       =€ AI Diagnostic Engine API Server Running        Q
+Q       =â‚¬ AI Diagnostic Engine API Server Running        Q
 Q                                                          Q
 Q       Environment: ${process.env.NODE_ENV || 'development'}                              Q
 Q       Port: ${PORT}                                           Q
