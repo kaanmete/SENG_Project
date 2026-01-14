@@ -1,6 +1,6 @@
 import os
 from pydantic_settings import BaseSettings
-from typing import List
+from typing import List, Optional
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Level Assessment AI Engine"
@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     
     # Security
-    JWT_SECRET: str
+    JWT_SECRET: str = "unsafe_default_secret_for_debugging_only_change_in_prod"
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 10080  # 7 days
     
@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     ]
 
     # OpenAI
-    OPENAI_API_KEY: str
+    OPENAI_API_KEY: Optional[str] = None
 
     class Config:
         env_file = ".env"

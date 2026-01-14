@@ -5,14 +5,10 @@ from app.core.config import settings
 app = FastAPI(title=settings.PROJECT_NAME)
 
 # CORS Configuration
-# Dynamically add env FRONTEND_URL if not already in list
-origins = list(settings.BACKEND_CORS_ORIGINS)
-if settings.FRONTEND_URL and settings.FRONTEND_URL not in origins:
-    origins.append(settings.FRONTEND_URL)
-
+# Allow ALL origins for debugging purposes to rule out CORS config issues
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
