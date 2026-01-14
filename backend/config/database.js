@@ -2,6 +2,12 @@ const { Pool } = require('pg');
 const logger = require('../utils/logger');
 
 // Create PostgreSQL connection pool
+if (!process.env.DATABASE_URL) {
+  logger.warn('DATABASE_URL is not set. Database connection will likely fail.');
+} else {
+  logger.info('DATABASE_URL is set.');
+}
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? {
