@@ -7,32 +7,32 @@ const WS_BASE_URL = import.meta.env.VITE_WS_URL || window.location.origin.replac
 export const API_ENDPOINTS = {
   // Authentication
   AUTH: {
-    REGISTER: `${API_BASE_URL}/api/auth/register`,
-    LOGIN: `${API_BASE_URL}/api/auth/login`,
-    VERIFY_EMAIL: `${API_BASE_URL}/api/auth/verify-email`,
-    RESEND_VERIFICATION: `${API_BASE_URL}/api/auth/resend-verification`,
-    REQUEST_PASSWORD_RESET: `${API_BASE_URL}/api/auth/request-password-reset`,
-    RESET_PASSWORD: `${API_BASE_URL}/api/auth/reset-password`,
-    PROFILE: `${API_BASE_URL}/api/auth/profile`
+    REGISTER: `${API_BASE_URL}/api/v1/auth/register`,
+    LOGIN: `${API_BASE_URL}/api/v1/auth/login`,
+    VERIFY_EMAIL: `${API_BASE_URL}/api/v1/auth/verify-email`,
+    RESEND_VERIFICATION: `${API_BASE_URL}/api/v1/auth/resend-verification`,
+    REQUEST_PASSWORD_RESET: `${API_BASE_URL}/api/v1/auth/request-password-reset`,
+    RESET_PASSWORD: `${API_BASE_URL}/api/v1/auth/reset-password`,
+    PROFILE: `${API_BASE_URL}/api/v1/users/me`
   },
 
   // User Management
   USER: {
-    UPDATE_LEARNING_PURPOSE: `${API_BASE_URL}/api/users/learning-purpose`,
-    EXAM_HISTORY: `${API_BASE_URL}/api/users/exam-history`,
-    ANALYTICS: `${API_BASE_URL}/api/users/analytics`,
-    STUDY_PLAN: `${API_BASE_URL}/api/users/study-plan`,
-    DELETE_ACCOUNT: `${API_BASE_URL}/api/users/account`
+    UPDATE_LEARNING_PURPOSE: `${API_BASE_URL}/api/v1/users/me/purpose`,
+    EXAM_HISTORY: `${API_BASE_URL}/api/v1/users/exam-history`,
+    ANALYTICS: `${API_BASE_URL}/api/v1/users/analytics`,
+    STUDY_PLAN: `${API_BASE_URL}/api/v1/users/study-plan`,
+    DELETE_ACCOUNT: `${API_BASE_URL}/api/v1/users/account`
   },
 
   // Exams
   EXAM: {
-    START: `${API_BASE_URL}/api/exams/start`,
-    ACTIVE: `${API_BASE_URL}/api/exams/active`,
-    TEST_POOL: `${API_BASE_URL}/api/exams/test-pool`,
-    NEXT_QUESTION: (examId) => `${API_BASE_URL}/api/exams/${examId}/next-question`,
-    GET_HINT: (examId, questionId) => `${API_BASE_URL}/api/exams/${examId}/question/${questionId}/hint`,
-    SUBMIT_ANSWER: (examId) => `${API_BASE_URL}/api/exams/${examId}/submit-answer`
+    START: `${API_BASE_URL}/api/v1/exams/start`,
+    ACTIVE: `${API_BASE_URL}/api/v1/exams/active`,
+    TEST_POOL: `${API_BASE_URL}/api/v1/exams/test-pool`,
+    NEXT_QUESTION: (examId) => `${API_BASE_URL}/api/v1/exams/${examId}/question`,
+    GET_HINT: (examId, questionId) => `${API_BASE_URL}/api/v1/exams/${examId}/question/${questionId}/hint`,
+    SUBMIT_ANSWER: (examId) => `${API_BASE_URL}/api/v1/exams/${examId}/answer`
   },
 
   // Assessments
@@ -46,13 +46,13 @@ export const API_ENDPOINTS = {
 
   // Admin
   ADMIN: {
-    SYSTEM_HEALTH: `${API_BASE_URL}/api/admin/health`,
-    ALL_USERS: `${API_BASE_URL}/api/admin/users`,
-    USER_DETAILS: (userId) => `${API_BASE_URL}/api/admin/users/${userId}`,
-    UPDATE_ROLE: (userId) => `${API_BASE_URL}/api/admin/users/${userId}/role`,
-    DELETE_USER: (userId) => `${API_BASE_URL}/api/admin/users/${userId}`,
-    USAGE_REPORTS: `${API_BASE_URL}/api/admin/reports/usage`,
-    METRICS: `${API_BASE_URL}/api/admin/metrics`
+    SYSTEM_HEALTH: `${API_BASE_URL}/api/v1/admin/health`,
+    ALL_USERS: `${API_BASE_URL}/api/v1/admin/users`,
+    USER_DETAILS: (userId) => `${API_BASE_URL}/api/v1/admin/users/${userId}`,
+    UPDATE_ROLE: (userId) => `${API_BASE_URL}/api/v1/admin/users/${userId}/role`,
+    DELETE_USER: (userId) => `${API_BASE_URL}/api/v1/admin/users/${userId}`,
+    USAGE_REPORTS: `${API_BASE_URL}/api/v1/admin/reports/usage`,
+    METRICS: `${API_BASE_URL}/api/v1/admin/metrics`
   }
 };
 
