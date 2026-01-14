@@ -2,10 +2,13 @@
 nixPkgs = ["nodejs-18_x"]
 
 [phases.install]
-cmds = ["npm ci --include=dev"]
+cmds = [
+  "npm ci --include=dev",
+  "chmod +x node_modules/.bin/vite"
+]
 
 [phases.build]
-cmds = ["./node_modules/.bin/vite build"]
+cmds = ["node_modules/.bin/vite build"]
 
 [start]
 cmd = "npx serve -s dist -l $PORT"
