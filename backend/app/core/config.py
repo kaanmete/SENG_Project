@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 10080  # 7 days
     
     # CORS
-    FRONTEND_URL: str = "http://localhost:5173"
+    FRONTEND_URL: str = "https://frontend-production-77355.up.railway.app"
     BACKEND_CORS_ORIGINS: List[str] = [
         "http://localhost:5173",
         "http://localhost:3000",
