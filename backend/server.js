@@ -7,7 +7,6 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
 const logger = require('./utils/logger');
-const logger = require('./utils/logger');
 const { apiLimiter } = require('./middleware/rateLimiter');
 const path = require('path');
 
@@ -18,17 +17,38 @@ const server = http.createServer(app);
 // Initialize Socket.IO for real-time features (NFR-04)
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'https://frontend-production-77355.up.railway.app',
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
     credentials: true
   }
 });
 
+// Allowed origins list
+const allowedOrigins = [
+  'https://frontend-production-77355.up.railway.app', // Old frontend deployment
+  'https://web-production-a7769.up.railway.app',      // Unified deployment
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 // Middleware
 app.use(helmet()); // Security headers
 app.use(compression()); // Response compression
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://frontend-production-77355.up.railway.app',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+      callback(null, true);
+    } else {
+      logger.warn(`Blocked by CORS: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
