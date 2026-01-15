@@ -18,51 +18,57 @@ const Exam = () => {
     const [loading, setLoading] = useState(true);
 
     // --- 1. ADIM: TÜM SORULARI HAVUZDAN ÇEK ---
+    // --- 1. ADIM: TÜM SORULARI ÇEK ---
+    // --- 1. ADIM: SORULARI ÇEK VE FİLTRELE ---
     useEffect(() => {
-        const fetchAllQuestions = async () => {
+        const fetchQuestions = async () => {
             try {
-                console.log("Veritabanındaki tüm sorular isteniyor...");
-
-                // 👇 KRİTİK DEĞİŞİKLİK:
-                // /exams/start yerine /questions endpoint'ini kullanıyoruz.
-                // Bu endpoint genellikle veritabanındaki HER ŞEYİ verir.
-                // Router prefix'i "/exams" olduğu için yeni adresimiz "/exams/all" oldu.
-                const response = await api.get('/exams/all');
+                // 1. Backend'den TÜM soruları iste (Hepsini getirir)
+                const response = await api.get('/exams/all'); 
                 
-                // Eğer cevap boşsa veya dizi değilse
                 if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
-                    alert("Veritabanından soru çekilemedi! (Liste boş)");
+                    alert("Veritabanı boş, soru bulunamadı.");
                     navigate('/dashboard');
                     return;
                 }
 
-                console.log(`Toplam ${response.data.length} adet soru geldi.`);
+                // 2. TEMİZLİK: Bozuk (şıksız) soruları ele
+                const validQuestions = response.data.filter(q => 
+                    q.options && Object.keys(q.options).length > 0
+                );
 
-                // Soruları Karıştır (Shuffle) 🎲
-                // Backend karıştırmıyorsa biz karıştırırız!
-                const mixedQuestions = response.data.sort(() => 0.5 - Math.random());
+                // 3. KATEGORİ FİLTRESİ: Sadece seçilen dersin sorularını al 🎯
+                // (Örn: Sen 'vocabulary' seçtiysen, sadece 'vocabulary' olanları alır)
+                // skillType Dashboard'dan geliyor, q.skill_type Backend'den geliyor.
+                // Büyük/küçük harf hatası olmasın diye ikisini de küçültüp bakıyoruz.
+                const categoryQuestions = validQuestions.filter(q => 
+                    q.skill_type && q.skill_type.toLowerCase() === skillType.toLowerCase()
+                );
 
-                // İstersen soru sayısını sınırlayabilirsin (Örn: Sadece 10 soru sor)
-                // const finalQuestions = mixedQuestions.slice(0, 10); 
+                console.log(`Toplam: ${validQuestions.length}, ${skillType} için bulunan: ${categoryQuestions.length}`);
+
+                if (categoryQuestions.length === 0) {
+                    // Eğer o kategoride hiç soru yoksa uyar
+                    alert(`"${skillType}" kategorisinde henüz soru eklenmemiş. Diğer dersleri deneyebilirsin.`);
+                    navigate('/dashboard');
+                    return;
+                }
+
+                // 4. KARIŞTIR: Bulunan soruları rastgele sırala 🎲
+                const mixedQuestions = categoryQuestions.sort(() => 0.5 - Math.random());
                 
                 setQuestions(mixedQuestions);
                 setLoading(false);
 
             } catch (error) {
-                console.error("Soru Çekme Hatası:", error);
-                
-                // Eğer /questions endpoint'i yoksa (404) kullanıcıyı uyaralım
-                if (error.response && error.response.status === 404) {
-                    alert("Hata: Backend'de '/questions' adında bir listeleme sayfası bulunamadı.");
-                } else {
-                    alert("Sorular yüklenirken bir hata oluştu.");
-                }
+                console.error("Hata:", error);
+                alert("Sorular yüklenirken bir hata oluştu.");
                 navigate('/dashboard');
             }
         };
 
-        fetchAllQuestions();
-    }, [navigate]);
+        fetchQuestions();
+    }, [navigate, skillType]); // skillType değişirse tekrar çalışsın
 
     // --- CEVAPLAMA İŞLEMLERİ (AYNI) ---
     const handleOptionSelect = (key) => setSelectedOption(key);
@@ -136,35 +142,63 @@ const Exam = () => {
                 </span>
             </div>
 
+            {/* Soru Kartı */}
+            {/* Soru Kartı */}
             <div className="bg-white p-8 md:p-12 rounded-3xl shadow-lg w-full max-w-3xl border border-gray-100">
+                
+                {/* 👇 GÜNCELLENEN KISIM: Sütun adı 'context_text' olarak düzeltildi */}
+                {/* context_text (veya yedek olarak paragraph) varsa ekrana bas */}
+                {(currentQuestion.context_text || currentQuestion.paragraph) && (
+                    <div className="mb-8 p-6 bg-blue-50 rounded-xl border-l-4 border-blue-500 text-gray-700 text-lg leading-relaxed italic shadow-inner">
+                        <h4 className="text-blue-800 font-bold mb-2 not-italic text-sm uppercase tracking-wide">
+                            {skillType === 'listening' ? '🔊 Metin (Script)' : '📖 Okuma Parçası'}
+                        </h4>
+                        {/* Metni burada gösteriyoruz */}
+                        {currentQuestion.context_text || currentQuestion.paragraph}
+                    </div>
+                )}
+                {/* 👆 GÜNCELLENEN KISIM BİTTİ */}
+
+                {/* Soru Metni */}
                 <h2 className="text-2xl font-bold text-gray-800 mb-8 leading-snug">
                     {currentQuestion.question_text}
                 </h2>
+                
+                {/* ... (Şıklar ve Butonlar aynı kalacak) ... */}
 
+                {/* Şıklar */}
                 <div className="space-y-4">
-                    {/* Backend options nesnesi {A:..., B:...} geliyor */}
                     {Object.entries(currentQuestion.options).map(([key, value]) => (
                         <div 
                             key={key}
                             onClick={() => handleOptionSelect(key)}
-                            className={`p-5 rounded-xl border-2 cursor-pointer transition-all flex items-center
-                                ${selectedOption === key ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-gray-100 hover:border-blue-200'}`}
+                            className={`p-5 rounded-xl border-2 cursor-pointer transition-all flex items-center group
+                                ${selectedOption === key 
+                                    ? 'border-blue-500 bg-blue-50 shadow-sm' 
+                                    : 'border-gray-100 hover:border-blue-200 hover:bg-gray-50'}`}
                         >
-                            <span className={`w-10 h-10 flex items-center justify-center rounded-full font-bold mr-4
-                                ${selectedOption === key ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                            <span className={`w-10 h-10 flex items-center justify-center rounded-full font-bold mr-4 transition-colors
+                                ${selectedOption === key ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500 group-hover:bg-white'}
+                            `}>
                                 {key}
                             </span>
-                            <span className="text-lg font-medium text-gray-700">{value}</span>
+                            <span className={`text-lg font-medium ${selectedOption === key ? 'text-blue-900' : 'text-gray-700'}`}>
+                                {value}
+                            </span>
                         </div>
                     ))}
                 </div>
 
+                {/* Buton */}
                 <div className="mt-10 flex justify-end">
                     <button 
                         onClick={handleNext}
                         disabled={!selectedOption}
-                        className={`px-8 py-4 rounded-xl font-bold text-white transition-all shadow-lg hover:shadow-xl
-                            ${selectedOption ? 'bg-blue-600 hover:bg-blue-700 scale-105' : 'bg-gray-300 cursor-not-allowed'}`}
+                        className={`px-8 py-4 rounded-xl font-bold text-white transition-all shadow-md
+                            ${selectedOption 
+                                ? 'bg-blue-600 hover:bg-blue-700 scale-105' 
+                                : 'bg-gray-300 cursor-not-allowed'
+                            }`}
                     >
                         {currentIndex + 1 === questions.length ? 'Bitir' : 'İleri →'}
                     </button>
