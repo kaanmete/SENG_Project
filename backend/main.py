@@ -13,6 +13,13 @@ app = FastAPI()
 app.include_router(exams.router) # <-- EKLENDİ
 app.include_router(stats.router) # <-- EKLENDİ
 
+# 👇 GÜNCELLENECEK KISIM BURASI 👇
+origins = [
+    "http://localhost:3000",      # Frontend'in yerel adresi
+    "http://127.0.0.1:3000",      # Bazen localhost yerine bu kullanılır
+    "*"                           # Diğer tüm adresler (Yedek olarak kalsın)
+]
+
 # 2. CORS Ayarları (Frontend'in Backend'e erişmesi için izin)
 app.add_middleware(
     CORSMiddleware,
