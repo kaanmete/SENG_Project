@@ -11,7 +11,7 @@ router = APIRouter(
 
 # --- 1. YENİ EKLENEN KAPI: TÜM SORULARI GETİR ---
 # Frontend buradan tüm listeyi çekecek: /exams/all
-@router.get("/all", response_model=List[schemas.QuestionOut])
+@router.get("/all")
 def get_all_questions(
     db: Session = Depends(database.get_db),
     # İstersen buraya user kontrolü ekleyebilirsin, şimdilik test için açık bırakalım
