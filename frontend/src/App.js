@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Exam from './pages/Exam'; // <--- 1. BURAYI EKLE
 import PrivateRoute from './components/PrivateRoute';
+import WritingExam from './pages/WritingExam';
 
 function App() {
   return (
@@ -24,6 +25,12 @@ function App() {
           <Route path="/exam" element={
             <PrivateRoute>
               <Exam />
+            </PrivateRoute>
+          } />
+
+          <Route path="/writing" element={
+            <PrivateRoute>
+              <WritingExam />
             </PrivateRoute>
           } />
 

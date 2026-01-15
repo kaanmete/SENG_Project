@@ -93,15 +93,16 @@ const Dashboard = () => {
                     </div>
 
                     {/* 5. YAZMA (Writing) - YENİ EKLENDİ (Pasif Mod) */}
+                    {/* 5. YAZMA (Writing) - ARTIK AKTİF! 🚀 */}
                     <div 
-                        onClick={() => alert("Yapay Zeka (AI) modülü şu an güncelleniyor. Çok yakında writing özelliği aktif olacak! 🚧")}
+                        onClick={() => navigate('/writing')} 
                         className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group"
                     >
                         <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6 bg-pink-50 text-pink-600 group-hover:scale-110 transition-transform">
                             📝
                         </div>
                         <h3 className="text-xl font-bold text-gray-800 mb-1">Yazma</h3>
-                        <p className="text-gray-400 text-sm font-medium">Writing (AI Değerlendirme)</p>
+                        <p className="text-gray-400 text-sm font-medium">Writing (AI Destekli)</p>
                     </div>
 
                     {/* 6. İSTATİSTİKLER */}
