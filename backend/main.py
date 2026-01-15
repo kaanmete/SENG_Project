@@ -15,15 +15,16 @@ app.include_router(stats.router) # <-- EKLENDİ
 
 # 👇 GÜNCELLENECEK KISIM BURASI 👇
 origins = [
-    "http://localhost:3000",      # Frontend'in yerel adresi
-    "http://127.0.0.1:3000",      # Bazen localhost yerine bu kullanılır
-    "*"                           # Diğer tüm adresler (Yedek olarak kalsın)
+    "http://localhost:3000",      # React Local
+    "http://127.0.0.1:3000",      # React Alternatif
+    "https://frontend-production-url.railway.app", # (İleride Frontend'i yükleyince buraya onun linkini de ekleyeceksin)
+    "*" # (Test için herkese açar - Güvenlik uyarısı ama şimdilik iş görür)
 ]
 
 # 2. CORS Ayarları (Frontend'in Backend'e erişmesi için izin)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Güvenlik için production'da spesifik domain yazılır
+    allow_origins=["*"],  # Şimdilik her şeye izin verelim (Yıldız işareti *)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

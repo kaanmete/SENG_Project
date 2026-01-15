@@ -7,27 +7,29 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+  const handleLogin = async (e) => {
         e.preventDefault();
-        
-        // Backend, OAuth2 formatında veri bekler (FormData)
-        const formData = new FormData();
-        formData.append('username', email); // Backend 'username' arar, biz email yolluyoruz
-        formData.append('password', password);
-
         try {
-            const response = await api.post('/login', formData);
-            
-            // 1. Token'ı hafızaya kaydet
+            // 👇 1. Veriyi "Form Data" formatına çeviriyoruz
+            const formData = new FormData();
+            formData.append('username', email); // Backend 'username' bekler, biz email gönderiyoruz
+            formData.append('password', password);
+
+            // 👇 2. Header bilgisini ekleyerek isteği atıyoruz
+            const response = await api.post('/login', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data' // Veya 'application/x-www-form-urlencoded'
+                }
+            });
+
+            // Başarılı olursa token'ı kaydet
             localStorage.setItem('token', response.data.access_token);
-            
-            // 2. Kullanıcıyı tebrik et ve yönlendir (Şimdilik Dashboard'a)
-            alert("Giriş Başarılı! 🔓");
-            navigate('/dashboard'); 
+            alert("Giriş Başarılı!");
+            navigate('/dashboard');
 
         } catch (error) {
             console.error("Login Hatası:", error);
-            alert("Giriş Başarısız! Email veya şifre yanlış.");
+            alert("Giriş yapılamadı. Lütfen bilgileri kontrol edin.");
         }
     };
 
