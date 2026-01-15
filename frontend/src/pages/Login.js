@@ -1,0 +1,67 @@
+import React, { useState } from 'react';
+import api from '../api/axios'; // Backend bağlantımız
+import { useNavigate } from 'react-router-dom'; // Sayfa değiştirmek için
+
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        
+        // Backend, OAuth2 formatında veri bekler (FormData)
+        const formData = new FormData();
+        formData.append('username', email); // Backend 'username' arar, biz email yolluyoruz
+        formData.append('password', password);
+
+        try {
+            const response = await api.post('/login', formData);
+            
+            // 1. Token'ı hafızaya kaydet
+            localStorage.setItem('token', response.data.access_token);
+            
+            // 2. Kullanıcıyı tebrik et ve yönlendir (Şimdilik Dashboard'a)
+            alert("Giriş Başarılı! 🔓");
+            navigate('/dashboard'); 
+
+        } catch (error) {
+            console.error("Login Hatası:", error);
+            alert("Giriş Başarısız! Email veya şifre yanlış.");
+        }
+    };
+
+    return (
+        <div className="flex justify-center items-center min-h-screen bg-gray-50">
+            <div className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md text-center border border-gray-100">
+                <h2 className="text-3xl font-bold text-gray-800 mb-6">Giriş Yap 👋</h2>
+                <form onSubmit={handleLogin} className="space-y-4">
+                    <input 
+                        type="email" 
+                        placeholder="Email Adresin" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="w-full p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 transition-all"
+                    />
+                    <input 
+                        type="password" 
+                        placeholder="Şifren" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        className="w-full p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 transition-all"
+                    />
+                    <button type="submit" className="w-full bg-blue-600 text-white p-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-md">
+                        Giriş Yap
+                    </button>
+                </form>
+                <button className="mt-6 text-blue-500 hover:text-blue-700 text-sm font-medium hover:underline" onClick={() => navigate('/register')}>
+                    Hesabın yok mu? Kayıt Ol
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export default Login;

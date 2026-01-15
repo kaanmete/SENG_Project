@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import func
-from typing import List
+from typing import List, Optional
 from app import database, models, schemas, auth
 
 router = APIRouter(
@@ -9,30 +9,53 @@ router = APIRouter(
     tags=["Exams"]
 )
 
-# 1. RASTGELE SINAV OLUŞTUR (GET /exams/start)
-# Kullanıcı bu adrese gidince ona rastgele 10 soru vereceğiz.
-@router.get("/start", response_model=List[schemas.QuestionOut])
-def start_exam(
-    skill: str = "vocabulary", # Varsayılan: vocabulary
-    level: str = "Easy",       # Varsayılan: Easy
-    limit: int = 5,            # Kaç soru gelsin?
+# --- 1. YENİ EKLENEN KAPI: TÜM SORULARI GETİR ---
+# Frontend buradan tüm listeyi çekecek: /exams/all
+@router.get("/all", response_model=List[schemas.QuestionOut])
+def get_all_questions(
     db: Session = Depends(database.get_db),
-    current_user: models.User = Depends(auth.get_current_user) # Sadece giriş yapanlar!
+    # İstersen buraya user kontrolü ekleyebilirsin, şimdilik test için açık bırakalım
+    # current_user: models.User = Depends(auth.get_current_user) 
 ):
-    # Veritabanından rastgele (func.random) soruları çek
-    questions = db.query(models.Question)\
-        .filter(models.Question.skill_type == skill)\
-        .filter(models.Question.difficulty == level)\
-        .order_by(func.random())\
-        .limit(limit)\
-        .all()
+    # Filtre yok, limit yok. Ne varsa getir!
+    questions = db.query(models.Question).all()
     
     if not questions:
-        raise HTTPException(status_code=404, detail="Bu kriterlerde yeterli soru bulunamadı.")
+        raise HTTPException(status_code=404, detail="Veritabanında hiç soru yok.")
         
     return questions
 
-# 2. CEVAPLARI KONTROL ET (POST /exams/submit)
+
+# --- 2. ESKİ RASTGELE SINAV OLUŞTURUCU (Aynı kaldı) ---
+# Burayı daha sonra spesifik sınavlar için kullanırız.
+@router.get("/start", response_model=List[schemas.QuestionOut])
+def start_exam(
+    skill: Optional[str] = None, # Artık zorunlu değil
+    level: Optional[str] = None,
+    limit: int = 10,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    query = db.query(models.Question)
+
+    # Eğer Frontend özellikle bir konu isterse filtrele, istemezse filtreleme
+    if skill:
+        query = query.filter(models.Question.skill_type == skill)
+    
+    if level:
+        query = query.filter(models.Question.difficulty == level)
+
+    # Rastgele karıştır ve getir
+    questions = query.order_by(func.random()).limit(limit).all()
+    
+    if not questions:
+        # Hata fırlatmak yerine boş liste dönmek frontend'i çökertmez
+        return [] 
+        
+    return questions
+
+
+# --- 3. CEVAPLARI KONTROL ET (Aynı kaldı) ---
 @router.post("/submit", response_model=schemas.ExamResult)
 def submit_exam(
     submission: schemas.ExamSubmit,
@@ -43,16 +66,15 @@ def submit_exam(
     correct = 0
     wrong = 0
     
-    # 1. Puanı Hesapla
     for question_id, user_answer in submission.answers.items():
         question = db.query(models.Question).filter(models.Question.id == question_id).first()
         if question and question.correct_option == user_answer:
             correct += 1
-            score += 10 # Her doğru 10 puan
+            score += 10
         else:
             wrong += 1
             
-    # 2. VERİTABANINA KAYDET (YENİ KISIM) 💾
+    # Sonucu Kaydet
     new_attempt = models.ExamAttempt(
         user_id=current_user.id,
         skill_type=submission.skill_type,
@@ -62,7 +84,7 @@ def submit_exam(
         correct_count=correct
     )
     db.add(new_attempt)
-    db.commit() # Kalıcı hale getir
+    db.commit()
     
     return {
         "score": score,
