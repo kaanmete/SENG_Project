@@ -24,12 +24,14 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",      # Frontend (React)
     "http://127.0.0.1:3000",
-    "*"                           # Geliştirme için her yere izin ver
+    "*",
+    "https://frontend-production-8885.up.railway.app"
+    # Geliştirme için her yere izin ver
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"], # Tüm adreslere izin ver
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
