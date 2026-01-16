@@ -5,6 +5,9 @@
 
 An advanced full‑stack web application that evaluates English proficiency across multiple skills using adaptive testing and LLM‑based diagnostics. The system intelligently maps learners to **CEFR levels (A1–C2)** while providing real‑time feedback, analytics, and administrative control.
 
+[![Live Demo](https://img.shields.io/badge/demo-online-green.svg)](https://aidiagnosticengine.up.railway.app)
+> **Live Demo:** [aidiagnosticengine.up.railway.app](https://aidiagnosticengine.up.railway.app)
+
 ---
 
 ## 📌 Project Highlights
