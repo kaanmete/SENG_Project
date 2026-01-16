@@ -1,34 +1,45 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
-from app import models, schemas, auth, database
-from app.routers import exams # <-- EKLENDİ
 from fastapi.security import OAuth2PasswordRequestForm
-from app.routers import exams, stats # <-- stats EKLENDİ
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
-# 1. Veritabanı Tablolarını Oluştur (Eğer yoksa)
+# App modüllerini çağırıyoruz
+from app import models, schemas, auth, database
+
+# Router'ları (API yollarını) çağırıyoruz
+# Eğer 'stats' veya 'auth' router dosyan yoksa o kelimeleri buradan silebilirsin.
+# Ancak 'users' ve 'exams' kesinlikle olmalı.
+from app.routers import exams, users,admin
+
+# 1. Veritabanı Tablolarını Oluştur
 models.Base.metadata.create_all(bind=database.engine)
 
-app = FastAPI() 
-app.include_router(exams.router) # <-- EKLENDİ
-app.include_router(stats.router) # <-- EKLENDİ
 
-# 👇 GÜNCELLENECEK KISIM BURASI 👇
+app = FastAPI()
+
+# --- CORS AYARLARI ---
 origins = [
-    "http://localhost:3000",      # React Local
-    "http://127.0.0.1:3000",      # React Alternatif
-    "https://frontend-production-url.railway.app", # (İleride Frontend'i yükleyince buraya onun linkini de ekleyeceksin)
-    "*" # (Test için herkese açar - Güvenlik uyarısı ama şimdilik iş görür)
+    "http://localhost:3000",      # Frontend (React)
+    "http://127.0.0.1:3000",
+    "*"                           # Geliştirme için her yere izin ver
 ]
 
-# 2. CORS Ayarları (Frontend'in Backend'e erişmesi için izin)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Şimdilik her şeye izin verelim (Yıldız işareti *)
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# --- ROUTERLARI SİSTEME DAHİL ET ---
+app.include_router(exams.router) # Sınav endpointleri
+app.include_router(users.router)
+app.include_router(admin.router) # Kullanıcı profil (/me) endpointi (İsim sorunu çözer)
+# app.include_router(stats.router) # Eğer stats.py oluşturduysan burayı açabilirsin
 
 # Veritabanı bağlantısı al
 def get_db():
@@ -38,7 +49,7 @@ def get_db():
     finally:
         db.close()
 
-# --- API UÇLARI (ENDPOINTS) ---
+# --- TEMEL ENDPOINTLER ---
 
 @app.get("/")
 def read_root():
@@ -55,13 +66,13 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     # Şifreyi hashle
     hashed_password = auth.get_password_hash(user.password)
     
-    # YENİ KULLANICI OLUŞTUR (GÜNCELLENMİŞ HALİ)
+    # Yeni kullanıcı oluştur
     new_user = models.User(
         full_name=user.full_name,
         email=user.email,
         password=hashed_password,
         learning_purpose=user.learning_purpose,
-        role="user"  # <--- İŞTE BU SATIRI EKLEDİK (Unutulan parça buydu)
+        role="user" 
     )
     
     db.add(new_user)
@@ -73,7 +84,7 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 # 2. GİRİŞ YAP (LOGIN)
 @app.post("/login", response_model=schemas.Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    # Kullanıcıyı bul (Swagger 'username' gönderir, biz onu 'email' olarak kullanırız)
+    # Kullanıcıyı bul
     user = db.query(models.User).filter(models.User.email == form_data.username).first()
 
     # Kullanıcı yoksa veya şifre yanlışsa

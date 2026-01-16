@@ -14,6 +14,7 @@ class UserOut(BaseModel):
     full_name: str
     email: EmailStr
     role: str
+    learning_purpose: Optional[str] = "general" 
 
     class Config:
         from_attributes = True
@@ -36,7 +37,11 @@ class QuestionOut(BaseModel):
     difficulty: str
     question_text: str
     options: Dict[str, str]
-    # correct_option GİZLİ
+    
+    # 👇 BU SATIRI EKLİYORUZ:
+    # Okuma parçası veya Listening script'i buraya gelecek.
+    # Optional yaptık çünkü her soruda metin olmak zorunda değil.
+    context_text: Optional[str] = None 
 
     class Config:
         from_attributes = True

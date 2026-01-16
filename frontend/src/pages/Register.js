@@ -1,66 +1,159 @@
 import React, { useState } from 'react';
-import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/axios';
 
 const Register = () => {
-    const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
+    // State yönetimi
+    const [formData, setFormData] = useState({
+        full_name: '',
+        email: '',
+        password: ''
+    });
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Input değişimi
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    // Kayıt İşlemi
     const handleRegister = async (e) => {
         e.preventDefault();
-        
-        try {
-            // Backend'e kullanıcı verilerini gönder
-            await api.post('/register', {
-                full_name: fullName,
-                email: email,
-                password: password,
-                learning_purpose: "student"
-            });
-            
-            alert("Kayıt Başarılı! 🎉 Giriş yapabilirsin.");
-            navigate('/'); // Giriş sayfasına yönlendir
+        setError('');
+        setIsLoading(true);
 
-        } catch (error) {
-            console.error("Kayıt Hatası:", error);
-            alert("Kayıt olunamadı. Bu email kullanılıyor olabilir.");
+        try {
+            await api.post('/register', {
+                full_name: formData.full_name,
+                email: formData.email,
+                password: formData.password,
+                learning_purpose: "general"
+            });
+
+            // Başarılı olursa login sayfasına yönlendir
+            alert("Registration successful! Please sign in.");
+            navigate('/login');
+
+        } catch (err) {
+            console.error("Kayıt Hatası:", err);
+            const errorMsg = err.response?.data?.detail || 'Registration failed. Please try again.';
+            setError(errorMsg);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <div className="auth-container">
-            <div className="auth-box">
-                <h2>Aramıza Katıl 🚀</h2>
-                <form onSubmit={handleRegister}>
-                    <input 
-                        type="text" 
-                        placeholder="Adın Soyadın" 
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        required
-                    />
-                    <input 
-                        type="email" 
-                        placeholder="Email Adresin" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                    <input 
-                        type="password" 
-                        placeholder="Şifren" 
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                    <button type="submit">Kayıt Ol</button>
+        <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-white flex items-center justify-center px-4 font-sans">
+            
+            {/* Ana Kart */}
+            <div className="w-full max-w-md bg-white p-10 rounded-3xl shadow-xl border border-gray-100">
+                
+                {/* Logo ve Başlık */}
+                <div className="text-center mb-8">
+                    {/* 👇 LOGO BURADA DEĞİŞTİ 👇 */}
+                    <div className="flex justify-center items-center gap-3 mb-6">
+                        <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-200">
+                            AI
+                        </div>
+                        <span className="text-2xl font-bold tracking-tight text-gray-900">
+                            Diagnostic Engine
+                        </span>
+                    </div>
+                    {/* 👆 LOGO BURADA DEĞİŞTİ 👆 */}
+                    
+                    <h2 className="text-3xl font-extrabold text-gray-900">Create Account</h2>
+                    <p className="text-gray-500 mt-2">Join us to master English with AI.</p>
+                </div>
+
+                {/* Hata Mesajı */}
+                {error && (
+                    <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded-r-lg">
+                        {error}
+                    </div>
+                )}
+
+                {/* Form */}
+                <form onSubmit={handleRegister} className="space-y-5">
+                    
+                    {/* Full Name */}
+                    <div>
+                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Full Name
+                        </label>
+                        <input
+                            type="text"
+                            name="full_name"
+                            required
+                            className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all placeholder-gray-400"
+                            placeholder="John Doe"
+                            value={formData.full_name}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    {/* Email */}
+                    <div>
+                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Email Address
+                        </label>
+                        <input
+                            type="email"
+                            name="email"
+                            required
+                            className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all placeholder-gray-400"
+                            placeholder="name@example.com"
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    {/* Password */}
+                    <div>
+                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            name="password"
+                            required
+                            minLength="6"
+                            className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all placeholder-gray-400"
+                            placeholder="Create a password"
+                            value={formData.password}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className={`w-full py-4 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center
+                            ${isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 hover:scale-105'}`}
+                    >
+                        {isLoading ? "Creating Account..." : "Sign Up"}
+                    </button>
                 </form>
-                {/* Giriş sayfasına dönme butonu */}
-                <button className="link-btn" onClick={() => navigate('/')}>
-                    Zaten hesabın var mı? Giriş Yap
-                </button>
+
+                {/* Alt Linkler (Login'e Dönüş) */}
+                <div className="mt-8 text-center">
+                    <p className="text-gray-500 text-sm">
+                        Already have an account?{' '}
+                        <button 
+                            onClick={() => navigate('/login')}
+                            className="text-blue-600 font-bold hover:underline"
+                        >
+                            Log In
+                        </button>
+                    </p>
+                </div>
             </div>
         </div>
     );
