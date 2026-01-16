@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Backend adresi
 const api = axios.create({
-    baseURL: 'http://localhost:8000',
+    baseURL: 'https://backend-production-6792.up.railway.app/',
 });
 
 // --- 1. İSTEK (REQUEST) INTERCEPTOR ---
