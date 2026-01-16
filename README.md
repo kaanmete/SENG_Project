@@ -97,21 +97,39 @@ Intelligent score‑to‑level mapping from **A1 → C2**
 
 ```text
 SENG_Project/
-├── backend/               # FastAPI Application
+├── backend/               # 🐍 FastAPI Application (Python)
 │   ├── app/
-│   │   ├── routers/       # API Route handlers
-│   │   ├── utils/         # Helper functions
-│   │   ├── auth.py        # Security & JWT logic
-│   │   ├── database.py    # DB connection & sessions
-│   │   ├── models.py      # SQLAlchemy models
-│   │   └── schemas.py     # Pydantic schemas
-│   └── main.py            # App entry point
-└── frontend/              # React Application
+│   │   ├── routers/       # 📍 API Route Handlers
+│   │   │   ├── admin.py       # Admin-only endpoints (user management, stats)
+│   │   │   ├── exams.py       # Exam logic (writing, adaptive tests, history)
+│   │   │   ├── stats.py       # Statistics & analytics data aggregation
+│   │   │   └── users.py       # User profile & account management endpoints
+│   │   ├── utils/         # 🛠️ Helper Utilities
+│   │   │   └── email.py       # SMTP email sender for account verification
+│   │   ├── auth.py        # 🔐 Security (OAuth2 scheme, Token generation, Hashing)
+│   │   ├── database.py    # 🗄️ Database SessionManager & connection logic
+│   │   ├── models.py      # 🏗️ SQLAlchemy Database Models (User, ExamAttempt)
+│   │   └── schemas.py     # 📐 Pydantic Data Schemas (Validation & Serialization)
+│   └── main.py            # 🚀 App Entry Point (CORS code, Router inclusion)
+└── frontend/              # ⚛️ React Application (JavaScript)
     ├── src/
-    │   ├── api/           # Axios services
-    │   ├── components/    # UI components
-    │   ├── pages/         # Application pages
-    │   └── App.js         # Root component
+    │   ├── api/           # 🌐 API Services
+    │   │   └── axios.js       # Global Axios instance with Interceptors
+    │   ├── components/    # 🧩 Reusable UI Components
+    │   │   └── PrivateRoute.js # HOC for protecting routes (redirects if not logged in)
+    │   ├── pages/         # 📄 Application Views
+    │   │   ├── AdminDashboard.js # Admin control panel view
+    │   │   ├── Dashboard.js      # User's main hub (recent exams, progress)
+    │   │   ├── Exam.js           # Adaptive multiple-choice exam interface
+    │   │   ├── LandingPage.js    # Public landing page (features, CTA)
+    │   │   ├── LearningPurpose.js# Onboarding step (collects user goals)
+    │   │   ├── Login.js          # User authentication page
+    │   │   ├── Profile.js        # User profile settings & detailed history
+    │   │   ├── Register.js       # New account creation page
+    │   │   ├── TestSelection.js  # Menu to choose exam type (Reading, Writing, etc.)
+    │   │   ├── VerifyEmail.js    # Page handling email verification token
+    │   │   └── WritingExam.js    # AI-powered writing assessment interface
+    │   └── App.js         # 🌳 Root Component (Routing definitions)
 ```
 
 ---
