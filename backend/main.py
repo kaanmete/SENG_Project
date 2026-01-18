@@ -23,7 +23,10 @@ origins = [
     "http://localhost:3000",      # Frontend (React)
     "http://127.0.0.1:3000",
     "*",
-    "https://frontend-production-8885.up.railway.app"
+    "https://frontend-production-8885.up.railway.app",
+    "https://aidiagnosticengine.up.railway.app/login",
+    "https://aidiagnosticengine.up.railway.app/register",
+    "https://aidiagnosticengine.up.railway.app"
 ]
 
 app.add_middleware(
