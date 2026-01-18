@@ -5,7 +5,7 @@ import api from '../api/axios';
 const TestSelection = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const skill = location.state?.skill || "Vocabulary"; // Dashboard'dan gelen skill
+    const skill = location.state?.skill || "Vocabulary"; // Skill from Dashboard
     
     const [testCount, setTestCount] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ const TestSelection = () => {
     useEffect(() => {
         const fetchTestCount = async () => {
             try {
-                // Backend'den kaç tane test olduğunu öğren
+                // Find out how many tests there are from the backend
                 const response = await api.get(`/exams/count-tests?skill=${skill}`);
                 setTestCount(response.data.total_tests);
             } catch (error) {
@@ -26,7 +26,7 @@ const TestSelection = () => {
     }, [skill]);
 
     const handleSelectTest = (testNumber) => {
-        // Exam sayfasına hem skill hem de test numarasını gönderiyoruz
+        //We send both the skill number and the test number to the exam page.
         navigate('/exam', { state: { skill: skill, testNumber: testNumber } });
     };
 
@@ -41,7 +41,7 @@ const TestSelection = () => {
                     <h1 className="text-3xl font-extrabold text-gray-900">{skill} Tests</h1>
                 </div>
 
-                {/* Test Listesi */}
+                {/* Test List */}
                 {loading ? (
                     <div className="text-center py-20 text-gray-500">Loading tests...</div>
                 ) : (
