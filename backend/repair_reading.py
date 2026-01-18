@@ -39,35 +39,35 @@ def generate_context_for_question(question_text, correct_answer_text):
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"❌ Groq Hatası: {e}")
+        print(f"❌ Groq Error: {e}")
         return None
 
 def main():
-    print("🕵️‍♂️ Eksik Reading parçaları aranıyor...")
+    print("🕵️‍♂️ Missing Reading passages are being sought...")
     
-    # Veritabanından context_text'i BOŞ olan Reading sorularını çek
+    # Retrieve Reading questions from the database where context_text is EMPTY.
     broken_questions = db.query(models.Question)\
         .filter(models.Question.skill_type == "Reading")\
         .filter((models.Question.context_text == None) | (models.Question.context_text == ""))\
         .all()
     
     if not broken_questions:
-        print("🎉 Harika! Tamir edilecek eksik soru bulunamadı.")
+        print("🎉 Great! No missing questions found to fix.")
         return
 
-    print(f"⚠️ Toplam {len(broken_questions)} adet paragrafsız soru bulundu. Tamirat başlıyor...\n")
+    print(f"⚠️ A total of {len(broken_questions)} questions without paragraphs were found. Repairs are starting...\n")
 
     count = 0
     for q in broken_questions:
-        # Doğru şıkkın metnini bul (Örn: "B" şıkkı ise, B'nin içindeki "London" yazısını al)
+        # Find the text of the correct answer (e.g., if the answer is "B", take the word "London" from within "B")
         correct_option_key = q.correct_option # "A", "B", "C" vb.
         correct_answer_text = q.options.get(correct_option_key, "")
         
         if not correct_answer_text:
-            print(f"⏭️ Soru ID {q.id} geçildi (Doğru cevap metni bulunamadı).")
+            print(f"⏭️ Question ID {q.id} passed (Correct answer text not found).")
             continue
 
-        print(f"🔨 Tamir ediliyor: {q.question_text[:30]}... (Cevap: {correct_answer_text})")
+        print(f"🔨 Repairing: {q.question_text[:30]}... (Answer: {correct_answer_text})")
         
         # Groq'a paragraf yazdır
         new_context = generate_context_for_question(q.question_text, correct_answer_text)
@@ -77,11 +77,11 @@ def main():
             q.context_text = new_context
             db.commit() # Kaydet
             count += 1
-            print(f"   ✅ Paragraf eklendi: {new_context[:40]}...")
+            print(f"   ✅ Paragraph added: {new_context[:40]}...")
         else:
-            print("   ❌ AI yanıt veremedi.")
+            print("    ❌ AI could not respond.")
 
-    print(f"\n🏁 İŞLEM TAMAMLANDI! {count} adet soru kurtarıldı ve güncellendi.")
+    print(f"\n🏁 OPERATION COMPLETE! {count} questions recovered and updated.")
     db.close()
 
 if __name__ == "__main__":
