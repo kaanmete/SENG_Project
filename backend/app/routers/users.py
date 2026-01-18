@@ -1,27 +1,27 @@
 import json
-import re  # AI yanıtını temizlemek için gerekli
+import re  
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import database, models, schemas, auth
 from pydantic import BaseModel
-from app.utils.email import send_verification_email  # 📧 Mail fonksiyonunu import ettik
+from app.utils.email import send_verification_email  
 
 router = APIRouter(
     prefix="/users",
     tags=["Users"]
 )
 
-# --- VERİ MODELİ ---
+# --- DATA MODEL ---
 class PurposeUpdate(BaseModel):
     purpose: str
 
-# 1. KULLANICI BİLGİLERİNİ GETİR
+# 1. GET USER INFORMATION
 @router.get("/me", response_model=schemas.UserOut)
 def read_users_me(current_user: models.User = Depends(auth.get_current_user)):
     """Giriş yapmış kullanıcının bilgilerini döner."""
     return current_user
 
-# 2. EMAIL DOĞRULAMA ENDPOINT
+# 2. Email Verification Endpoint
 @router.get("/verify-email")
 def verify_email(token: str, db: Session = Depends(database.get_db)):
     # Basitlik için token olarak e-posta adresi kullanıyoruz
@@ -37,7 +37,7 @@ def verify_email(token: str, db: Session = Depends(database.get_db)):
     db.commit()
     return {"message": "Email verified successfully! You can now login."}
 
-# 3. İSTATİSTİK VE AI SEVİYE ANALİZİ (Geliştirildi 🚀)
+# 3. STATISTICS AND AI LEVEL ANALYSIS
 @router.get("/stats")
 def get_user_stats(
     db: Session = Depends(database.get_db),
@@ -56,7 +56,7 @@ def get_user_stats(
     total_exams = len(attempts)
     avg_score = sum([a.score for a in attempts]) / total_exams
 
-    # AI Analizi için veriyi hazırla
+    # Prepare the data for AI analysis
     recent_data = ""
     for a in attempts[:5]:
         recent_data += f"Skill: {a.skill_type}, Score: {a.score}\n"
@@ -82,7 +82,7 @@ def get_user_stats(
         
         content = response.choices[0].message.content.strip()
         
-        # 🛡️ REGEX İLE JSON AYIKLAMA (Takılmayı önler)
+        # JSON Parsing with REGEX (Prevents Stuck)
         json_match = re.search(r'\{.*\}', content, re.DOTALL)
         if json_match:
             content = json_match.group(0)
@@ -102,7 +102,7 @@ def get_user_stats(
         "ai_analysis": ai_res.get("advice", "Keep practicing.")
     }
 
-# 4. ÖĞRENME AMACINI GÜNCELLE
+# 4. UPDATE THE LEARNING OBJECTIVE
 @router.post("/update-purpose")
 def update_learning_purpose(
     request: PurposeUpdate, 
@@ -119,7 +119,7 @@ def update_learning_purpose(
     
     return {"message": "Learning purpose updated", "purpose": user.learning_purpose}
 
-# 5. KAYIT OLMA (Email Gönderimi Eklendi 📧)
+# 5. REGISTER 
 @router.post("/register", response_model=schemas.UserOut)
 def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
@@ -138,7 +138,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)
     db.commit()
     db.refresh(new_user)
 
-    # 📧 KAYIT SONRASI DOĞRULAMA MAİLİ GÖNDER
+    # SEND POST-REGISTRATION CONFIRMATION EMAIL (Not Working)
     try:
         send_verification_email(new_user.email, token=new_user.email)
         print(f"✅ Verification email triggered for {new_user.email}")
