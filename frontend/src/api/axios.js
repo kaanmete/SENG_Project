@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-// Backend adresi
+// Backend address
 const api = axios.create({
     baseURL: 'https://backend-production-6792.up.railway.app/',
 });
 
-// --- 1. İSTEK (REQUEST) INTERCEPTOR ---
-// Her istek gönderilmeden önce buraya uğrar ve Token ekler.
+// --- 1. REQUEST INTERCEPTOR ---
+// Intercepts every request before sending to add the Token.
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
@@ -20,24 +20,24 @@ api.interceptors.request.use(
     }
 );
 
-// --- 2. CEVAP (RESPONSE) INTERCEPTOR ---
-// Backend'den hata dönerse burası yakalar.
+// --- 2. RESPONSE INTERCEPTOR ---
+// Catches errors returned from the Backend.
 api.interceptors.response.use(
     (response) => {
-        // Cevap başarılıysa olduğu gibi devam et
+        // If the response is successful, continue as is
         return response;
     },
     (error) => {
-        // Eğer hata 401 (Yetkisiz) ise, Token geçersiz demektir.
+        // If the error is 401 (Unauthorized), it means the Token is invalid.
         if (error.response && error.response.status === 401) {
             console.warn("Oturum süresi doldu, çıkış yapılıyor...");
             
-            // Tokenları temizle
+            // Clear tokens
             localStorage.removeItem('token');
             localStorage.removeItem('user');
 
-            // Kullanıcıyı Login sayfasına at (React Router hook'ları burada çalışmaz, window kullanıyoruz)
-            // Eğer login sayfasındaysak tekrar yönlendirme yapma
+            // Redirect user to Login page (React Router hooks don't work here, using window)
+            // If already on the login page, do not redirect again
             if (window.location.pathname !== '/login') {
                 window.location.href = '/login';
             }
