@@ -17,7 +17,7 @@ const VerifyEmail = () => {
             }
 
             try {
-                // Backend'deki endpoint'i çağırıyoruz
+                // We are calling the endpoint on the backend
                 await api.get(`/users/verify-email?token=${token}`);
                 setStatus("success");
             } catch (error) {
