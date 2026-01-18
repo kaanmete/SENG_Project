@@ -8,7 +8,7 @@ const LearningPurpose = () => {
     const [loading, setLoading] = useState(false);
     const [currentPurpose, setCurrentPurpose] = useState("");
 
-    // Kullanıcının seçebileceği seçenekler
+    // Options the user can choose from
     const purposes = [
         { id: "Exam Preparation", title: "Academic Exams", desc: "Focus on IELTS, TOEFL, or school assessments.", icon: "🎓" },
         { id: "Business", title: "Business & Work", desc: "Professional communication and formal English.", icon: "💼" },
@@ -17,7 +17,7 @@ const LearningPurpose = () => {
     ];
 
     useEffect(() => {
-        // Mevcut kullanıcı bilgisini çek ve eğer zaten bir amacı varsa state'e ata
+        // Retrieve current user information and assign it to the state if it already has a purpose.
         const userData = localStorage.getItem('user');
         if (userData) {
             try {
@@ -36,10 +36,10 @@ const LearningPurpose = () => {
         if (!selectedPurpose) return;
         setLoading(true);
         try {
-            // Backend'e güncelleme isteği at
+            // Send an update request to the backend
             const response = await api.post('/users/update-purpose', { purpose: selectedPurpose });
             
-            // LocalStorage'daki kullanıcı bilgisini güncelle (Dashboard'da doğru görünmesi için)
+            // Update user information in LocalStorage (so it appears correctly in the Dashboard)
             const userData = JSON.parse(localStorage.getItem('user'));
             userData.learning_purpose = response.data.purpose;
             localStorage.setItem('user', JSON.stringify(userData));
@@ -57,7 +57,7 @@ const LearningPurpose = () => {
     return (
         <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center py-16 px-6 font-sans">
             <div className="max-w-2xl w-full">
-                {/* BAŞLIK ALANI */}
+                {/* TITLE AREA */}
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-black text-slate-900 mb-4">What is your goal?</h1>
                     <p className="text-slate-500">
@@ -65,7 +65,7 @@ const LearningPurpose = () => {
                     </p>
                 </div>
 
-                {/* KARTLARIN DİZİLİMİ */}
+                {/* ARRANGEMENT OF THE CARDS */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
                     {purposes.map((p) => (
                         <div 
@@ -80,7 +80,7 @@ const LearningPurpose = () => {
                             <h3 className="font-bold text-slate-800 text-lg mb-1">{p.title}</h3>
                             <p className="text-slate-400 text-xs leading-relaxed">{p.desc}</p>
                             
-                            {/* Seçim İşareti */}
+                            {/* Select Mark */}
                             <div className={`mt-4 flex justify-end transition-opacity ${selectedPurpose === p.id ? 'opacity-100' : 'opacity-0'}`}>
                                 <div className="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xs">
                                     ✓
@@ -90,7 +90,7 @@ const LearningPurpose = () => {
                     ))}
                 </div>
 
-                {/* AKSİYON BUTONLARI */}
+                {/* ACTION BUTTONS */}
                 <div className="flex items-center justify-between bg-white p-4 rounded-3xl shadow-sm border border-slate-100">
                     <button 
                         onClick={() => navigate('/dashboard')}
