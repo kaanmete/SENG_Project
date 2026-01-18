@@ -13,7 +13,7 @@ import LearningPurpose from './pages/LearningPurpose';
 import VerifyEmail from './pages/VerifyEmail';
 import AdminDashboard from './pages/AdminDashboard';
 
-// Route Koruması (Giriş yapmamışsa Dashboard'a giremesin)
+// Route Protection (Prevent unlogged-in Dashboard access)
 const PrivateRoute = ({ children }) => {
     const token = localStorage.getItem('token');
     return token ? children : <Navigate to="/login" />;
@@ -24,10 +24,10 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-            {/* 👇 Ana Sayfa artık LandingPage */}
+            {/* Homepage is now LandingPage */}
             <Route path="/" element={<LandingPage />} />
             
-            {/* Login Sayfası */}
+            {/* Login Page */}
             <Route path="/login" element={<Login />} />
 
             <Route path="/register" element={<Register />} />
@@ -36,7 +36,7 @@ function App() {
 
             <Route path="/tests" element={<PrivateRoute><TestSelection /></PrivateRoute>} />
 
-            {/* Korumalı Sayfalar */}
+            {/* Protected Pages */}
             <Route path="/dashboard" element={
                 <PrivateRoute><Dashboard /></PrivateRoute>
             } />
