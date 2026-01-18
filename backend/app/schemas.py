@@ -2,7 +2,7 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional, Dict, List
 from datetime import datetime
 
-# --- 1. KULLANICI & GİRİŞ İŞLEMLERİ ---
+# --- 1. USER AND LOGIN PROCEDURES ---
 class UserCreate(BaseModel):
     full_name: str
     email: EmailStr
@@ -30,7 +30,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     email: Optional[str] = None
 
-# --- 2. SINAV SİSTEMİ ---
+# --- 2. EXAM SYSTEM ---
 class QuestionOut(BaseModel):
     id: int
     skill_type: str
@@ -38,9 +38,6 @@ class QuestionOut(BaseModel):
     question_text: str
     options: Dict[str, str]
     
-    # 👇 BU SATIRI EKLİYORUZ:
-    # Okuma parçası veya Listening script'i buraya gelecek.
-    # Optional yaptık çünkü her soruda metin olmak zorunda değil.
     context_text: Optional[str] = None 
 
     class Config:
@@ -58,7 +55,7 @@ class ExamResult(BaseModel):
     wrong_count: int
     feedback: str
 
-# --- 3. İSTATİSTİKLER (PROFİL) ---
+# --- 3. STATISTICS (PROFILE) ---
 class ExamHistoryOut(BaseModel):
     id: int
     skill_type: str
