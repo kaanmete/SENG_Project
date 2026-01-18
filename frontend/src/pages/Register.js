@@ -5,7 +5,7 @@ import api from '../api/axios';
 const Register = () => {
     const navigate = useNavigate();
 
-    // State yönetimi
+    // State administration
     const [formData, setFormData] = useState({
         full_name: '',
         email: '',
@@ -14,7 +14,7 @@ const Register = () => {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    // Input değişimi
+    // Input change
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -22,7 +22,7 @@ const Register = () => {
         });
     };
 
-    // Kayıt İşlemi
+    // Registration Process
     const handleRegister = async (e) => {
         e.preventDefault();
         setError('');
@@ -36,12 +36,12 @@ const Register = () => {
                 learning_purpose: "general"
             });
 
-            // Başarılı olursa login sayfasına yönlendir
+            // If successful, it will redirect to the login page.
             alert("Registration successful! Please sign in.");
             navigate('/login');
 
         } catch (err) {
-            console.error("Kayıt Hatası:", err);
+            console.error("Registration Error:", err);
             const errorMsg = err.response?.data?.detail || 'Registration failed. Please try again.';
             setError(errorMsg);
         } finally {
@@ -52,12 +52,11 @@ const Register = () => {
     return (
         <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-white flex items-center justify-center px-4 font-sans">
             
-            {/* Ana Kart */}
+            {/* Mother board */}
             <div className="w-full max-w-md bg-white p-10 rounded-3xl shadow-xl border border-gray-100">
                 
-                {/* Logo ve Başlık */}
+                {/* Logo and Header */}
                 <div className="text-center mb-8">
-                    {/* 👇 LOGO BURADA DEĞİŞTİ 👇 */}
                     <div className="flex justify-center items-center gap-3 mb-6">
                         <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-200">
                             AI
@@ -66,13 +65,12 @@ const Register = () => {
                             Diagnostic Engine
                         </span>
                     </div>
-                    {/* 👆 LOGO BURADA DEĞİŞTİ 👆 */}
                     
                     <h2 className="text-3xl font-extrabold text-gray-900">Create Account</h2>
                     <p className="text-gray-500 mt-2">Join us to master English with AI.</p>
                 </div>
 
-                {/* Hata Mesajı */}
+                {/* Error Message */}
                 {error && (
                     <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded-r-lg">
                         {error}
@@ -142,7 +140,7 @@ const Register = () => {
                     </button>
                 </form>
 
-                {/* Alt Linkler (Login'e Dönüş) */}
+                {/* Sub-links (Return to Login) */}
                 <div className="mt-8 text-center">
                     <p className="text-gray-500 text-sm">
                         Already have an account?{' '}
