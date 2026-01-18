@@ -24,7 +24,7 @@ const Exam = () => {
     const [hint, setHint] = useState(null);
     const [hintLoading, setHintLoading] = useState(false);
 
-    // 1. SORULARI ÇEK VE SÜREYİ AYARLA
+    // 1. DRAW THE QUESTIONS AND SET THE TIME LIMIT
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
@@ -60,7 +60,7 @@ const Exam = () => {
         fetchQuestions();
     }, [skillType, testNumber, navigate]);
 
-    // 2. GERİ SAYIM MANTIĞI VE OTOMATİK SUBMIT
+    // 2. COUNTDOWN LOGIC AND AUTOMATIC SUBMIT
     useEffect(() => {
         if (timeLeft === null || isFinished) return;
 
@@ -77,7 +77,7 @@ const Exam = () => {
         return () => clearInterval(timer);
     }, [timeLeft, isFinished, userAnswers]);
 
-    // 👇 HİNT (İPUCU) ÇEKME FONKSİYONU 👇
+    // HINT (TIP) PULL FUNCTION 
     const handleGetHint = async () => {
         const currentQuestion = questions[currentIndex];
         setHintLoading(true);
@@ -201,7 +201,7 @@ const Exam = () => {
                 
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">{currentQuestion?.question_text}</h2>
 
-                {/* 👇 AI HINT BUTONU BURAYA EKLENDİ 👇 */}
+                {/*  AI HINT BUTTON  */}
                 <div className="mb-8">
                     {!hint ? (
                         <button 
