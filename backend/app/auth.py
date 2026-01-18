@@ -7,24 +7,23 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Ayarları .env dosyasından al
-# Ayarları .env dosyasından al (Bulamazsa varsayılanları kullan)
+# Get settings from the .env file (use defaults if not found)
 SECRET_KEY = os.getenv("SECRET_KEY", "cok_gizli_varsayilan_anahtar_123")
 ALGORITHM = os.getenv("ALGORITHM", "HS256") # <-- ARTIK GARANTİ ÇALIŞACAK
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 
-# Şifreleme Yöneticisi
+# Encryption Manager
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# 1. Şifreyi Doğrula (Girilen şifre ile veritabanındaki hash aynı mı?)
+# 1. Verify Password (Is the entered password the same as the hash in the database?)
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
-# 2. Şifreyi Hash'le (Kaydederken şifreyi karıştır)
+# 2. Hash the password (scramble the password when saving it)
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-# 3. Token Oluştur (Giriş Bileti)
+# 3. Create Token (Entry Ticket)
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     
@@ -37,7 +36,6 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-# --- BUNU EN ALTA EKLE ---
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from app import database, models
