@@ -22,7 +22,7 @@ const Dashboard = () => {
         navigate('/login');
     };
 
-    // Temel Ders Modülleri (4'lü tam simetri)
+    // Core Course Modules 
     const skillModules = [
         { title: "Vocabulary", skill: "Vocabulary", icon: "📚", desc: "Lexical mastery", color: "hover:bg-blue-50" },
         { title: "Grammar", skill: "Grammar", icon: "✍️", desc: "Syntax & structure", color: "hover:bg-purple-50" },
@@ -30,12 +30,12 @@ const Dashboard = () => {
         { title: "Listening", skill: "Listening", icon: "🎧", desc: "Aural training", color: "hover:bg-pink-50" }
     ];
 
-    // Yan Araçlar (Admin kontrolü eklendi)
+    // Side Tools 
     const tools = [
         { title: "Writing Lab", skill: "Writing", icon: "📝", navigate: "/writing-exam" },
         { title: "Learning Goals", skill: "Purpose", icon: "🎯", navigate: "/learning-purpose" },
         { title: "Performance", skill: "Profile", icon: "📊", navigate: "/profile" },
-        // Eğer kullanıcı admin ise listeye Admin Panelini de ekle
+        // If the user is an admin, add the Admin Panel to the list as well.
         ...(user.role === 'admin' ? [{ title: "Admin Panel", skill: "Admin", icon: "🛡️", navigate: "/admin" }] : [])
     ];
 
@@ -60,7 +60,7 @@ const Dashboard = () => {
 
             <main className="max-w-6xl mx-auto px-6 mt-10">
                 
-                {/* --- 2. KATMAN: ANA SINAV & AI DURUMU (SIDE-BY-SIDE) --- */}
+                {/* --- LAYER 2: MAIN EXAM & AI STATUS (SIDE-BY-SIDE) --- */}
                 <div className="flex flex-col lg:flex-row gap-6 mb-10">
                     {/* Mixed Exam - Kahraman Kart */}
                     <div 
@@ -75,7 +75,7 @@ const Dashboard = () => {
                         <div className="absolute right-[-20px] bottom-[-20px] text-9xl opacity-[0.03] group-hover:rotate-12 transition-transform">🚀</div>
                     </div>
 
-                    {/* AI Status - Bilgilendirme */}
+                    {/* AI Status - Information */}
                     <div className="w-full lg:w-1/3 bg-gray-900 rounded-3xl p-8 text-white flex flex-col justify-center">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
@@ -86,7 +86,7 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {/* --- 3. KATMAN: ANA DERS MODÜLLERİ (4'LÜ GRID) --- */}
+                {/* --- 3rd LAYER: MAIN COURSE MODULES (4-MOD GRID) --- */}
                 <div className="mb-10">
                     <div className="flex justify-between items-end mb-6">
                         <h3 className="text-xl font-black text-gray-900 tracking-tight">Skill Modules</h3>
@@ -104,7 +104,7 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {/* --- 4. KATMAN: YAN ARAÇLAR (HIZLI ERİŞİM - KOMPAKT) --- */}
+                {/* --- 4TH LAYER: SIDE VEHICLES (QUICK ACCESS - COMPACT) --- */}
                 <div>
                     <div className="flex justify-between items-end mb-6">
                         <h3 className="text-xl font-black text-gray-900 tracking-tight">Personal Tools</h3>
