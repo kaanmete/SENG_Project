@@ -5,7 +5,7 @@ import api from '../api/axios';
 const Login = () => {
     const navigate = useNavigate();
 
-    // State yönetimi
+    // State administration
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -47,10 +47,10 @@ const Login = () => {
     return (
         <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-white flex items-center justify-center px-4 font-sans">
             
-            {/* Ana Kart */}
+            {/* Mother board */}
             <div className="w-full max-w-md bg-white p-10 rounded-3xl shadow-xl border border-gray-100">
                 
-                {/* Logo ve Başlık */}
+                {/* Logo and Header */}
                 <div className="flex justify-center items-center gap-3 mb-6">
                         <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-200">
                             AI
@@ -60,7 +60,7 @@ const Login = () => {
                         </span>
                     </div>
 
-                {/* Hata Mesajı */}
+                {/* Error Message */}
                 {error && (
                     <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded-r-lg flex items-center">
                         <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/></svg>
@@ -117,12 +117,12 @@ const Login = () => {
                                 Logging in...
                             </>
                         ) : (
-                            "Log In"  // <-- BURASI GÜNCELLENDİ
+                            "Log In"  // 
                         )}
                     </button>
                 </form>
 
-                {/* Alt Linkler */}
+                {/* Sub-links */}
                 <div className="mt-8 text-center space-y-4">
                     <p className="text-gray-500 text-sm">
                         Don't have an account?{' '}
