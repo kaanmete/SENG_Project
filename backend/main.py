@@ -6,27 +6,24 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-# App modüllerini çağırıyoruz
+# We are calling app modules
 from app import models, schemas, auth, database
 
-# Router'ları (API yollarını) çağırıyoruz
-# Eğer 'stats' veya 'auth' router dosyan yoksa o kelimeleri buradan silebilirsin.
-# Ancak 'users' ve 'exams' kesinlikle olmalı.
+# We are calling routers (API paths)
 from app.routers import exams, users,admin
 
-# 1. Veritabanı Tablolarını Oluştur
+# 1. Create Database Tables
 models.Base.metadata.create_all(bind=database.engine)
 
 
 app = FastAPI()
 
-# --- CORS AYARLARI ---
+# --- CORS SETTINGS ---
 origins = [
     "http://localhost:3000",      # Frontend (React)
     "http://127.0.0.1:3000",
     "*",
     "https://frontend-production-8885.up.railway.app"
-    # Geliştirme için her yere izin ver
 ]
 
 app.add_middleware(
@@ -37,13 +34,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- ROUTERLARI SİSTEME DAHİL ET ---
-app.include_router(exams.router) # Sınav endpointleri
+# --- INCLUDE ROUTERS IN THE SYSTEM ---
+app.include_router(exams.router) # Exam endpoints
 app.include_router(users.router)
-app.include_router(admin.router) # Kullanıcı profil (/me) endpointi (İsim sorunu çözer)
-# app.include_router(stats.router) # Eğer stats.py oluşturduysan burayı açabilirsin
+app.include_router(admin.router) # User profile (/me) endpoint (Resolves name issue)
+app.include_router(stats.router) 
 
-# Veritabanı bağlantısı al
+# Obtain database connection
 def get_db():
     db = database.SessionLocal()
     try:
@@ -51,13 +48,13 @@ def get_db():
     finally:
         db.close()
 
-# --- TEMEL ENDPOINTLER ---
+# --- ESSENTIAL ENDPOINTS ---
 
 @app.get("/")
 def read_root():
     return {"message": "SENG Project Backend Çalışıyor! 🚀"}
 
-# 1. KULLANICI KAYDI (REGISTER)
+# 1. USER REGISTRATION
 @app.post("/register", response_model=schemas.UserOut)
 def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     # Email var mı kontrol et
@@ -65,10 +62,10 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     if db_user:
         raise HTTPException(status_code=400, detail="Bu email zaten kayıtlı!")
     
-    # Şifreyi hashle
+    # Hash the password
     hashed_password = auth.get_password_hash(user.password)
     
-    # Yeni kullanıcı oluştur
+    # Create a new user
     new_user = models.User(
         full_name=user.full_name,
         email=user.email,
@@ -83,13 +80,13 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     
     return new_user
 
-# 2. GİRİŞ YAP (LOGIN)
+# 2. LOGIN
 @app.post("/login", response_model=schemas.Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    # Kullanıcıyı bul
+    # Find the user
     user = db.query(models.User).filter(models.User.email == form_data.username).first()
 
-    # Kullanıcı yoksa veya şifre yanlışsa
+    # If no user exists or the password is incorrect
     if not user or not auth.verify_password(form_data.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -97,6 +94,6 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    # Token oluştur
+    # Create Tokens
     access_token = auth.create_access_token(data={"sub": user.email})
     return {"access_token": access_token, "token_type": "bearer"}
