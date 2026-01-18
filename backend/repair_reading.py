@@ -5,10 +5,8 @@ from app.database import SessionLocal
 from app import models
 from dotenv import load_dotenv
 
-# .env dosyasını yükle
 load_dotenv()
 
-# Veritabanı ve Groq Bağlantısı
 db = SessionLocal()
 client = OpenAI(
     api_key=os.getenv("GROQ_API_KEY"),
@@ -17,7 +15,7 @@ client = OpenAI(
 
 def generate_context_for_question(question_text, correct_answer_text):
     """
-    Soru ve doğru cevabı alıp, buna uygun bir okuma parçası üretir.
+    It takes the question and the correct answer and produces a reading passage accordingly.
     """
     prompt = f"""
     Write a short reading passage (50-80 words) in English.
