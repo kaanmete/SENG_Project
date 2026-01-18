@@ -13,7 +13,7 @@ const Profile = () => {
         ai_analysis: ""
     });
 
-    // Kullanıcı bilgisini local storage'dan al
+    // Retrieve user information from local storage
     const user = JSON.parse(localStorage.getItem('user')) || { 
         full_name: "Guest User", 
         email: "guest@example.com",
@@ -23,7 +23,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                // Backend'den istatistikleri ve AI analizini çek
+                // Pull statistics and AI analytics from the backend
                 const response = await api.get('/users/stats');
                 setStats(response.data);
             } catch (error) {
@@ -64,7 +64,7 @@ const Profile = () => {
 
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
-                {/* SOL: KULLANICI KARTI */}
+                {/* LEFT: USER CARD */}
                 <div className="lg:col-span-1 space-y-6">
                     <div className="bg-white p-8 rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-100 text-center relative overflow-hidden">
                         <div className="w-24 h-24 bg-blue-600 text-white rounded-3xl flex items-center justify-center text-4xl font-black mx-auto mb-6 rotate-3 shadow-lg shadow-blue-200">
@@ -85,7 +85,7 @@ const Profile = () => {
                         </button>
                     </div>
 
-                    {/* AI ANALİZ KUTUSU */}
+                    {/* AI ANALYSIS BOX */}
                     <div className="bg-indigo-900 p-6 rounded-[2rem] text-white shadow-lg relative overflow-hidden">
                         <div className="absolute -right-4 -top-4 text-6xl opacity-10 rotate-12">🤖</div>
                         <h3 className="text-indigo-300 font-black text-xs uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
@@ -97,7 +97,7 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* SAĞ: İSTATİSTİKLER VE GEÇMİŞ */}
+                {/* RIGHT: STATISTICS AND HISTORY */}
                 <div className="lg:col-span-2 space-y-8">
                     
                     {/* İstatistik Kartları */}
@@ -118,7 +118,7 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    {/* GEÇMİŞ AKTİVİTE */}
+                    {/* PAST ACTIVITY */}
                     <div className="bg-white p-8 rounded-[2.5rem] shadow-lg shadow-gray-200/50 border border-gray-100">
                         <h3 className="text-xl font-black text-gray-800 mb-8 flex items-center gap-3">
                             Recent Activity
