@@ -12,7 +12,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 from app import database, models, schemas, auth
 
-# .env dosyasını yükle
+# Upload the .env file
 load_dotenv()
 
 router = APIRouter(
@@ -20,13 +20,13 @@ router = APIRouter(
     tags=["Exams"]
 )
 
-# --- GROQ İSTEMCİSİ ---
+# --- GROQ CLIENT ---
 client = OpenAI(
     api_key=os.getenv("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
 )
 
-# --- VERİ MODELLERİ ---
+# --- DATA MODELS ---
 class WritingRequest(BaseModel):
     topic: str
     text: str
@@ -35,7 +35,7 @@ class HintRequest(BaseModel):
     question_text: str
     options: dict
 
-# --- YARDIMCI FONKSİYONLAR ---
+# --- AUXILIARY FUNCTIONS ---
 
 def grade_writing_with_groq(topic, user_text):
     prompt = f"""
@@ -74,7 +74,7 @@ def analyze_mistakes_with_groq(skill_type, mistakes, purpose="General"):
     for idx, m in enumerate(mistakes):
         mistakes_text += f"{idx+1}. Question: {m['question']}\n   Correct: {m['correct_answer']}\n"
 
-    # AI Analizine kullanıcının amacını da ekledik
+    # We have also added the user's purpose to the AI analysis.
     prompt = f"""
     You are an AI English Tutor. A student with the learning goal of "{purpose}" finished a {skill_type} exam.
     Mistakes:
@@ -111,7 +111,7 @@ def generate_hint_with_groq(question_text, options):
     except:
         return "Look closely at the keywords!"
 
-# --- ENDPOINTLER ---
+# --- ENDPOINT'S ---
 
 @router.get("/writing-topic")
 def get_random_writing_topic(db: Session = Depends(database.get_db)):
@@ -146,7 +146,7 @@ def get_test_questions(skill: str, test_number: int, db: Session = Depends(datab
 def get_all_questions(db: Session = Depends(database.get_db)):
     return db.query(models.Question).all() or []
 
-# 🚀 GÜNCELLENEN AMAÇ ODAKLI MIXED EXAM
+# GOAL-ORIENTED MIXED EXAM
 @router.get("/start-mixed", response_model=List[schemas.QuestionOut])
 def start_mixed_exam(
     db: Session = Depends(database.get_db),
@@ -168,7 +168,7 @@ def start_mixed_exam(
     for skill in skills:
         skill_questions = []
         
-        # Her zorluk seviyesi için (2 Easy, 2 Medium, 1 Hard)
+        # For each difficulty level (2 Easy, 2 Medium, 1 Hard)
         for diff, limit in [("Easy", 2), ("Medium", 2), ("Hard", 1)]:
             query = db.query(models.Question).filter(
                 models.Question.skill_type == skill, 
@@ -177,7 +177,7 @@ def start_mixed_exam(
 
             current_difficulty_questions = []
 
-            # 🎯 1. Seçenek: Amaca uygun soruları ara
+            # Option 1: Search for questions that suit the purpose
             if keywords:
                 keyword_filters = [models.Question.question_text.icontains(kw) for kw in keywords]
                 keyword_filters += [models.Question.context_text.icontains(kw) for kw in keywords]
@@ -185,7 +185,7 @@ def start_mixed_exam(
                 purpose_questions = query.filter(or_(*keyword_filters)).order_by(func.random()).limit(limit).all()
                 current_difficulty_questions.extend(purpose_questions)
 
-            # 🎯 2. Seçenek: Eksik kalanları rastgele genel sorularla tamamla
+            # Option 2: Complete the missing parts with random general questions.
             needed = limit - len(current_difficulty_questions)
             if needed > 0:
                 selected_ids = [q.id for q in current_difficulty_questions]
@@ -223,7 +223,7 @@ def submit_exam(
                 "correct_answer": question.options.get(question.correct_option, "Unknown")
             })
 
-    # Feedback'i kullanıcının amacına göre kişiselleştirdik
+    # We have personalised the feedback according to the user's purpose.
     ai_feedback_text = analyze_mistakes_with_groq(
         submission.skill_type, 
         mistakes_list, 
