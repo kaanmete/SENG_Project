@@ -9,7 +9,6 @@ const LandingPage = () => {
             
             {/* --- NAVBAR --- */}
             <nav className="w-full max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
-                {/* 👇 LOGO BURADA DEĞİŞTİ 👇 */}
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-200">
                         AI
@@ -18,7 +17,6 @@ const LandingPage = () => {
                         Diagnostic Engine
                     </span>
                 </div>
-                {/* 👆 LOGO BURADA DEĞİŞTİ 👆 */}
 
                 <div className="flex gap-4">
                     <button 
