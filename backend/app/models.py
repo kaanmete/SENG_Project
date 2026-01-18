@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from .database import Base
 from datetime import datetime
 
-# 1. KULLANICI TABLOSU
+# 1. USER TABLE
 class User(Base):
     __tablename__ = "users"
 
@@ -19,19 +19,19 @@ class User(Base):
     # İlişkiler
     attempts = relationship("ExamAttempt", back_populates="owner")
 
-# 2. SORU TABLOSU
+# 2. QUESTIONS TABLE
 class Question(Base):
     __tablename__ = "questions"
 
     id = Column(Integer, primary_key=True, index=True)
     skill_type = Column(String)  # Grammar, Vocabulary, Reading
     difficulty = Column(String)  # Easy, Medium, Hard
-    context_text = Column(String, nullable=True) # Okuma parçaları için
+    context_text = Column(String, nullable=True) # For reading passages
     question_text = Column(String)
-    options = Column(JSON)       # Şıklar {"A": "...", "B": "..."}
+    options = Column(JSON)       # Options {"A": "...", "B": "..."}
     correct_option = Column(String)
 
-# 3. SINAV SONUÇLARI (KARNE) TABLOSU
+# 3. EXAM RESULT TABLE
 class ExamAttempt(Base):
     __tablename__ = "exam_attempts"
 
