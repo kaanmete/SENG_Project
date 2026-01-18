@@ -41,7 +41,7 @@ app.add_middleware(
 app.include_router(exams.router) # Exam endpoints
 app.include_router(users.router)
 app.include_router(admin.router) # User profile (/me) endpoint (Resolves name issue)
-app.include_router(stats.router) 
+#app.include_router(stats.router) 
 
 # Obtain database connection
 def get_db():
