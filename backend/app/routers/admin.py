@@ -4,9 +4,9 @@ from app import database, models, schemas, auth
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
-# Admin mi kontrolü yapan yardımcı fonksiyon
+# Admin control auxiliary function
 def check_admin(current_user: models.User = Depends(auth.get_current_user)):
-    # is_admin yerine role sütununa bakıyoruz
+    We are looking at the role column instead of #is_admin
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Bu işlem için admin yetkisi gerekiyor!")
     return current_user
