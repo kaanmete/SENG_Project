@@ -30,7 +30,7 @@ api.interceptors.response.use(
     (error) => {
         // If the error is 401 (Unauthorized), it means the Token is invalid.
         if (error.response && error.response.status === 401) {
-            console.warn("Oturum süresi doldu, çıkış yapılıyor...");
+            console.warn("Session expired, logging out...");
             
             // Clear tokens
             localStorage.removeItem('token');
