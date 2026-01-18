@@ -13,7 +13,7 @@ const AdminDashboard = () => {
                 setUsers(userRes.data);
                 setStats(statRes.data);
             } catch (err) {
-                alert("Yetkiniz yok!");
+                alert("You don't have the authority!");
             }
         };
         fetchAdminData();
@@ -23,13 +23,13 @@ const AdminDashboard = () => {
         <div className="p-8 bg-gray-50 min-h-screen">
             <h1 className="text-3xl font-bold mb-8">Admin Panel</h1>
             
-            {/* İstatistik Kartları */}
+            {/* Statistics Cards */}
             <div className="grid grid-cols-2 gap-4 mb-8">
                 <div className="bg-white p-6 rounded-xl shadow">Total Users: {stats.total_users}</div>
                 <div className="bg-white p-6 rounded-xl shadow">Total Exams: {stats.total_exams}</div>
             </div>
 
-            {/* Kullanıcı Listesi */}
+            {/* User List */}
             <div className="bg-white rounded-xl shadow overflow-hidden">
                 <table className="w-full text-left">
                     <thead className="bg-gray-100">
